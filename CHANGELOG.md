@@ -33,3 +33,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New core types `SayBubble` and `CharacterState` (extends `Character` with an optional active say bubble), and an optional `caption` field on `RenderState`.
 - Additional pure core helpers in `src/core/scene/state.ts`: asset resolution with missing-asset handling (`resolveAsset`), coordinate clamping (`clamp`), and duration helpers (`clampTimestamp`, `scenarioDuration`), all fully tested.
 - Reached and locked 100% line/branch/statement/function coverage on `src/core/**/*.ts` (M2-T3), and added a coverage-gate guard test (`tests/core/coverageConfig.test.ts`) that fails if the Vitest include glob or the 100% thresholds are ever weakened.
+- Thin `useSceneState` view-model hook in `src/ui/viewModels` (M2-T4) that exposes core `computeSceneState` to components for a given scene + timestamp, with no business logic re-implemented in the hook.
+- Updated `useOfficeScene` to build on `useSceneState` (calling core `computeSceneState` at t=0) instead of calling `computeInitialState` directly, keeping the hook thin and delegating all logic to core.
