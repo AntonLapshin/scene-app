@@ -188,6 +188,9 @@ describe("parseStaticScene", () => {
     expect(parseAsset({ id: "a", asset: "plant", x: 1, y: 2, s: 1.1, pot: "#f00" })).toMatchObject({
       id: "a", asset: "plant", x: 1, y: 2, s: 1.1, pot: "#f00",
     });
+    expect(parseAsset({ id: "d1", asset: "desk", x: 1, y: 2, w: 200 })).toMatchObject({
+      id: "d1", asset: "desk", x: 1, y: 2, w: 200,
+    });
     expect(() => parseAsset(null)).toThrow(/asset must be an object/);
     expect(() => parseAsset({ id: "a", asset: "desk", x: 1 })).toThrow(/asset\.y must be a number/);
     expect(() => parseAsset({ id: "a", asset: "desk", x: 1, y: 2, dir: "north" })).toThrow(
