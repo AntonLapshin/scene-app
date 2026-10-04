@@ -45,10 +45,10 @@ Build a well-made, universal 2D scene replay engine that plays scenes defined de
   - Wire the scene through a thin React component tree (App -> SceneView) with a minimal showcase entry
 
 **Sub-issues:**
-  - [ ] M1-T1 Core typed models + parse/validate scene JSON (STATIC_SCENE, LIVE_SCENE, SCENARIO)
-  - [ ] M1-T2 Core initial-state computation at t=0 (backgrounds, objects, characters positioned per initial state)
-  - [ ] M1-T3 Procedural asset rendering + external image support with fallback
-  - [ ] M1-T4 SceneView component + App wiring + minimal showcase entry
+  - [x] M1-T1 Core typed models + parse/validate scene JSON (STATIC_SCENE, LIVE_SCENE, SCENARIO)
+  - [x] M1-T2 Core initial-state computation at t=0 (backgrounds, objects, characters positioned per initial state)
+  - [x] M1-T3 Procedural asset rendering + external image support with fallback
+  - [x] M1-T4 SceneView component + App wiring + minimal showcase entry
 
 ### M2 — Core pure logic: timeline evaluation with 100% coverage
 
@@ -127,6 +127,6 @@ Build a well-made, universal 2D scene replay engine that plays scenes defined de
 
 **Sub-issues:**
   - [ ] M6-T1 Ensure test (100% core coverage), lint, and build all pass in CI
-  - [ ] M6-T2 Deploy live demo of the office scene to GitHub Pages
+  - [x] M6-T2 Deploy live demo of the office scene to GitHub Pages
   - [ ] M6-T3 README + usage docs (authoring scenes, embedding the player)
   - [ ] M6-T4 Final end-to-end verification of replay engine and showcase
