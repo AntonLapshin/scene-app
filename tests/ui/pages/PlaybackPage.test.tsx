@@ -1,24 +1,29 @@
 import { describe, it, expect } from "vitest";
 import { render } from "@testing-library/react";
-import App from "../../src/App";
+import { PlaybackPage } from "../../../src/ui/pages/PlaybackPage";
+import { loadOfficeScene } from "../../../src/data/officeScene";
 
-describe("App (M4-T3)", () => {
-  it("renders the demo panel and the PlaybackPage composing the organisms", () => {
-    const { container, getByText, getByLabelText } = render(<App />);
-    // Demo panel present.
-    expect(getByText("Scene")).toBeTruthy();
-    // SceneStage organism present with the office scene SVG.
+describe("PlaybackPage (M4-T3)", () => {
+  it("composes the three organisms wired to the replay driver", () => {
+    const { container, getByText, getByLabelText, getAllByText } = render(
+      <PlaybackPage scene={loadOfficeScene()} />,
+    );
+
+    // SceneStage.
     expect(getByText(/SceneView · Office scene playback/)).toBeTruthy();
     const svg = container.querySelector("svg")!;
     expect(svg).toHaveAttribute("viewBox", "0 0 1040 730");
-    // A visible character is drawn on the stage.
     expect(container.querySelector("[data-character='maya']")).not.toBeNull();
-    // PlaybackBar organism present.
+
+    // PlaybackBar.
     expect(getByText("Playback controls")).toBeTruthy();
     expect(getByLabelText("Play")).toBeTruthy();
     expect(getByLabelText("Timeline")).toBeTruthy();
-    // SceneInfoPanel organism present with character cards.
+    expect(getAllByText("0.0s / 41.0s").length).toBeGreaterThan(0);
+
+    // SceneInfoPanel with character cards + metadata.
     expect(getByText("Scene info")).toBeTruthy();
     expect(container.querySelector("[data-character-card='maya']")).not.toBeNull();
+    expect(getByText("Northlight Studio · Floor 3")).toBeTruthy();
   });
 });
