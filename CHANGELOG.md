@@ -28,3 +28,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Image-availability adapter in `src/adapters/imageAvailability.ts` owning the impure browser `Image` I/O, keeping core pure.
 - Minimal `ShowcasePanel` component in `src/ui/components` demonstrating `SceneView` with a short description and its props listed.
 - `App` wired to load the office scene via `useOfficeScene` and render it through `ShowcasePanel`/`SceneView`, keeping the existing demo panel.
+- Core timeline evaluation (`computeSceneState`) in `src/core/scene/state.ts` that replays the scenario events up to any timestamp and returns the ordered render state: background layers, paint-ordered foreground objects, and visible characters with their live state (position, emotion, visibility, and active say bubble).
+- Small pure timeline helpers: `composeRenderState` (shared ordering with `computeInitialState`), `computeCharacterStates`, `applyEvent` (handles appear/move/emotion/say/exit/caption), `eventsUpTo`, and `activeCaptionAt`.
+- New core types `SayBubble` and `CharacterState` (extends `Character` with an optional active say bubble), and an optional `caption` field on `RenderState`.
