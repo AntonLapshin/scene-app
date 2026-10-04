@@ -17,3 +17,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pure `parseStaticScene` / `parseLiveScene` / `parseScenario` functions in `src/core/scene/parse.ts` that validate raw JSON and throw descriptive `SceneParseError`s on malformed/missing data.
 - Fixed asset set (furniture, wall decor, floor decals) with an optional external image reference per asset.
 - Fixed the scaffold's malformed multi-line `package.json` description and `App.tsx` string so `npm install` and `npm run build` succeed.
+- Core initial-state computation (`computeInitialState`) in `src/core/scene/state.ts` returning the ordered t=0 render state: background layers, paint-ordered foreground objects (assets, front walls, visible characters), and visible characters with their live state.
+- Small pure helper functions: `assetSortKey`, `lookupAssetById`, `lookupCharacterById`, `resolveCharacter`, and coordinate math (`distance`, `manhattanDistance`, `midpoint`).

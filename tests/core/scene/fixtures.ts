@@ -95,3 +95,9 @@ export const scenarioFixture = {
     { t: 40.0, type: "exit", who: "noah" },
   ],
 };
+
+export const sceneFixture = {
+  staticScene: staticSceneFixture,
+  liveScene: liveSceneFixture,
+  scenario: scenarioFixture,
+};

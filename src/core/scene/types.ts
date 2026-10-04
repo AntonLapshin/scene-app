@@ -348,3 +348,50 @@ export interface Scenario {
   duration: number;
   events: ScenarioEvent[];
 }
+
+/* ── BUNDLED SCENE + INITIAL STATE ────────────────────────────────── */
+
+/** A fully parsed scene bundle (M1-T2 input). */
+export interface Scene {
+  staticScene: StaticScene;
+  liveScene: LiveScene;
+  scenario: Scenario;
+}
+
+/** The static background layers drawn before foreground objects. */
+export interface Background {
+  floor: Floor;
+  corridor: Corridor;
+  walls: Wall[];
+  windows: Window[];
+  door: Door;
+  wallDecor: WallDecor[];
+  floorDecals: FloorDecal[];
+  lightPatches: LightPatch[];
+}
+
+/** What a foreground render object represents. */
+export type RenderObjectKind = "asset" | "wall" | "character";
+
+/**
+ * A single foreground item in paint order. Exactly one of `asset`, `wall` or
+ * `character` is set, matching `kind`.
+ */
+export interface RenderObject {
+  kind: RenderObjectKind;
+  /** Paint-order key: lower values are drawn first (behind). */
+  sortKey: number;
+  asset?: Asset;
+  wall?: Wall;
+  character?: Character;
+}
+
+/** The render state at a given timestamp. */
+export interface RenderState {
+  /** Static background layers (drawn first, in order). */
+  background: Background;
+  /** Foreground objects ordered by paint order (back to front). */
+  objects: RenderObject[];
+  /** Characters visible at this timestamp, with their live state. */
+  characters: Character[];
+}
