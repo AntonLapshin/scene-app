@@ -204,6 +204,8 @@ export interface Asset {
   y: number;
   /** Optional external image reference (sprite/background). */
   image?: string;
+  /** Width (counter/sofa/cabinet/printer/waterCooler/desk/etc.). */
+  w?: number;
   /** Slab thickness (desk/roundTable). */
   t?: number;
   /** Depth (desk/counter/cabinet/waterCooler/sofa/printer). */
