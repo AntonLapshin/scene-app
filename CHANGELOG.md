@@ -32,3 +32,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Small pure timeline helpers: `composeRenderState` (shared ordering with `computeInitialState`), `computeCharacterStates`, `applyEvent` (handles appear/move/emotion/say/exit/caption), `eventsUpTo`, and `activeCaptionAt`.
 - New core types `SayBubble` and `CharacterState` (extends `Character` with an optional active say bubble), and an optional `caption` field on `RenderState`.
 - Additional pure core helpers in `src/core/scene/state.ts`: asset resolution with missing-asset handling (`resolveAsset`), coordinate clamping (`clamp`), and duration helpers (`clampTimestamp`, `scenarioDuration`), all fully tested.
+- Reached and locked 100% line/branch/statement/function coverage on `src/core/**/*.ts` (M2-T3), and added a coverage-gate guard test (`tests/core/coverageConfig.test.ts`) that fails if the Vitest include glob or the 100% thresholds are ever weakened.
