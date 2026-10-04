@@ -1,6 +1,5 @@
 import type {
   RenderState,
-  DrawOp,
   Asset,
   Character,
   ImageAvailability,
@@ -9,7 +8,7 @@ import type {
   WallDecor,
   FloorDecal,
 } from "../../core/scene";
-import { renderAsset } from "../../core/scene";
+import { Sprite } from "./atoms/Sprite";
 
 export interface SceneViewProps {
   /** The ordered render state to draw. */
@@ -20,72 +19,6 @@ export interface SceneViewProps {
   imageAvailable?: ImageAvailability;
 }
 
-/** Map a single core draw op to its SVG primitive. */
-function DrawOpElement({ op }: { op: DrawOp }) {
-  switch (op.type) {
-    case "rect":
-      return (
-        <rect
-          x={op.x}
-          y={op.y}
-          width={op.w}
-          height={op.h}
-          fill={op.fill ?? "none"}
-          stroke={op.stroke}
-          strokeWidth={op.strokeWidth}
-          rx={op.rx}
-        />
-      );
-    case "ellipse":
-      return (
-        <ellipse
-          cx={op.cx}
-          cy={op.cy}
-          rx={op.rx}
-          ry={op.ry}
-          fill={op.fill ?? "none"}
-          stroke={op.stroke}
-          strokeWidth={op.strokeWidth}
-        />
-      );
-    case "line":
-      return (
-        <line
-          x1={op.x1}
-          y1={op.y1}
-          x2={op.x2}
-          y2={op.y2}
-          stroke={op.stroke}
-          strokeWidth={op.strokeWidth}
-        />
-      );
-    case "text":
-      return (
-        <text
-          x={op.x}
-          y={op.y}
-          fill={op.fill}
-          fontSize={op.fontSize}
-          textAnchor="middle"
-          dominantBaseline="central"
-        >
-          {op.text}
-        </text>
-      );
-    case "image":
-      return (
-        <image
-          x={op.x}
-          y={op.y}
-          width={op.w}
-          height={op.h}
-          href={op.src}
-          preserveAspectRatio="xMidYMid meet"
-        />
-      );
-  }
-}
-
 /** Render an asset via core `renderAsset` (image when available, else procedural). */
 function AssetElement({
   asset,
@@ -94,12 +27,9 @@ function AssetElement({
   asset: Asset;
   imageAvailable: ImageAvailability;
 }) {
-  const ops = renderAsset(asset, imageAvailable);
   return (
     <g data-asset={asset.id}>
-      {ops.map((op, i) => (
-        <DrawOpElement key={i} op={op} />
-      ))}
+      <Sprite asset={asset} imageAvailable={imageAvailable} />
     </g>
   );
 }

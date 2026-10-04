@@ -1,3 +1,7 @@
+import { Button } from "./atoms/Button";
+import { Slider } from "./atoms/Slider";
+import { Badge } from "./atoms/Badge";
+
 export interface PlaybackControlsProps {
   /** Whether playback is currently advancing. */
   isPlaying: boolean;
@@ -37,47 +41,30 @@ export function PlaybackControls({
 
   return (
     <div className="flex items-center gap-3 text-sm">
-      <button
-        type="button"
-        onClick={onToggle}
-        aria-label={isPlaying ? "Pause" : "Play"}
-        className="rounded-md bg-indigo-600 px-3 py-1.5 font-medium text-white hover:bg-indigo-700"
-      >
+      <Button variant="primary" onClick={onToggle} ariaLabel={isPlaying ? "Pause" : "Play"}>
         {isPlaying ? "Pause" : "Play"}
-      </button>
+      </Button>
 
-      <button
-        type="button"
-        onClick={onStepBackward}
-        aria-label="Step backward"
-        className="rounded-md border border-slate-300 px-2.5 py-1.5 text-slate-700 hover:bg-slate-50"
-      >
+      <Button variant="secondary" onClick={onStepBackward} ariaLabel="Step backward">
         ‹
-      </button>
+      </Button>
 
-      <input
-        type="range"
+      <Slider
+        value={clamped}
         min={0}
         max={duration}
         step={0.1}
-        value={clamped}
-        onChange={(e) => onSeek(Number(e.target.value))}
-        aria-label="Seek"
-        className="w-52 accent-indigo-600"
+        onChange={onSeek}
+        ariaLabel="Seek"
       />
 
-      <button
-        type="button"
-        onClick={onStepForward}
-        aria-label="Step forward"
-        className="rounded-md border border-slate-300 px-2.5 py-1.5 text-slate-700 hover:bg-slate-50"
-      >
+      <Button variant="secondary" onClick={onStepForward} ariaLabel="Step forward">
         ›
-      </button>
+      </Button>
 
-      <span className="font-mono text-xs text-slate-600" aria-live="polite">
+      <Badge tone="muted">
         {clamped.toFixed(1)}s / {duration.toFixed(1)}s
-      </span>
+      </Badge>
     </div>
   );
 }
