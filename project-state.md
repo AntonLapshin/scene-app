@@ -14,15 +14,20 @@ and merged: timeline evaluation (#15/#17), helpers (#16/#18), the coverage-gate
 guard test (#14/#19), and the thin `useSceneState` hook (#20/#23). All core
 logic is pure, and 100% coverage is enforced on `src/core/**/*.ts`.
 
-**M3 complete (core replay engine)** — replay driver (#21/#24) with pure core
-time/step helpers (`advanceTimestamp`, `nextEventTimestamp`,
-`previousEventTimestamp`, `stepForward`, `stepBackward`) in
-`src/core/scene/replay.ts` plus the thin `useReplayDriver` view model; playback
-controls (#22/#25) with play/pause/seek/step and time/duration display +
-seekable progress slider. M3-T4 (end-to-end verification vs prototype) remains
-and is planned below.
+**M3 complete** — replay driver (#21/#24) with pure core time/step helpers
+(`advanceTimestamp`, `nextEventTimestamp`, `previousEventTimestamp`,
+`stepForward`, `stepBackward`) in `src/core/scene/replay.ts` plus the thin
+`useReplayDriver` view model; playback controls (#22/#25) with
+play/pause/seek/step and time/duration display + seekable progress slider; and
+end-to-end playback verification vs the prototype (#26/#29) via
+`tests/core/scene/officeReplay.test.ts`.
 
-**M4 planned** — refactor UI into Atomic-design components + showcase.
+**M4 in progress** — atoms (#28/#30: `Button`, `Slider`, `Badge`, `Sprite`) and
+molecules (#27/#31: `PlaybackControlsMolecule`, `CharacterCard`,
+`TimelineScrubber`) extracted into `src/ui/components/{atoms,molecules}` with
+barrels. Remaining M4: organisms + pages (M4-T3), context injection (M4-T4),
+and showcase entries for every component (M4-T5). M5 (theming/polish) and M6
+(final integration/docs) remain.
 
 ## What's here
 
@@ -60,21 +65,33 @@ and is planned below.
 - [x] M2-T3 Achieve 100% coverage on src/core/**/*.ts (#14/#19)
 - [x] M2-T4 Thin React hooks calling core only (#20/#23)
 
-### M3 — Replay engine (core done, verification remaining)
+### M3 — Replay engine (complete)
 - [x] M3-T1 Replay driver (#21/#24)
 - [x] M3-T2 Playback controls (#22/#25)
 - [x] M3-T3 Time/duration display + seekable progress control (#22/#25)
-- [ ] M3-T4 End-to-end playback verification vs prototype (planned this turn)
+- [x] M3-T4 End-to-end playback verification vs prototype (#26/#29)
 
-### M4 — Atomic UI components + showcase (planned this turn)
-- [ ] M4-T1 Extract reusable atoms (buttons, sliders, badges, sprites)
-- [ ] M4-T2 Extract reusable molecules (playback controls, character card, timeline scrubber)
-- [ ] M4-T3 Compose organisms (SceneStage, PlaybackBar, SceneInfoPanel) and pages
-- [ ] M4-T4 Context injection (replay state, theme) instead of prop drilling
-- [ ] M4-T5 Showcase entries for every component
+### M4 — Atomic UI components + showcase (in progress)
+- [x] M4-T1 Extract reusable atoms (buttons, sliders, badges, sprites) (#28/#30)
+- [x] M4-T2 Extract reusable molecules (playback controls, character card, timeline scrubber) (#27/#31)
+- [ ] M4-T3 Compose organisms (SceneStage, PlaybackBar, SceneInfoPanel) and pages (#32)
+- [ ] M4-T4 Context injection (replay state, theme) instead of prop drilling (#33)
+- [ ] M4-T5 Showcase entries for every component (#34)
+
+### M5 — Theming and polish (planned this turn)
+- [ ] M5-T1 Theme pattern (design tokens) applied across all components
+- [ ] M5-T2 Edge cases (missing assets, malformed JSON, empty timeline, out-of-range timestamps)
+- [ ] M5-T3 Layout/responsive sizing polish
+- [ ] M5-T4 Showcase entries for theme variants and edge states
+
+### M6 — Final integration, deployment, and docs
+- [ ] M6-T1 Ensure test (100% core coverage), lint, and build all pass in CI
+- [x] M6-T2 Deploy live demo of the office scene to GitHub Pages
+- [ ] M6-T3 README + usage docs (authoring scenes, embedding the player)
+- [ ] M6-T4 Final end-to-end verification of replay engine and showcase
 
 ## Next steps
 
-- [ ] Engineer implements M3-T4 and M4-T1/T2.
-- [ ] Plan M4-T3/T4/T5 and milestone M5 on the next PM turn.
+- [ ] Engineer implements M4-T3 (#32), M4-T4 (#33), M4-T5 (#34).
+- [ ] Plan milestone M5 sub-issues on the next PM turn.
 - [ ] CI passes on main.
