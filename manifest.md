@@ -64,7 +64,7 @@ Build a well-made, universal 2D scene replay engine that plays scenes defined de
   - [x] M2-T1 Core timeline evaluation (compute scene state at any timestamp from events: move/appear/emotion/say/caption, presence, visibility, order)
   - [x] M2-T2 Core helpers (asset lookup, coordinate math, id resolution, validation, duration)
   - [x] M2-T3 Achieve 100% coverage on src/core/**/*.ts (tests)
-  - [ ] M2-T4 Thin React hooks calling core only
+  - [x] M2-T4 Thin React hooks calling core only
 
 ### M3 — Replay engine: playback controls and state driver
 
@@ -77,9 +77,9 @@ Build a well-made, universal 2D scene replay engine that plays scenes defined de
   - Drive the scene render from the replay state and verify end-to-end playback matches the prototype
 
 **Sub-issues:**
-  - [ ] M3-T1 Replay driver (advance time, recompute state each frame/step)
-  - [ ] M3-T2 Playback controls (play/pause/seek/step)
-  - [ ] M3-T3 Time/duration display + seekable progress control
+  - [x] M3-T1 Replay driver (advance time, recompute state each frame/step)
+  - [x] M3-T2 Playback controls (play/pause/seek/step)
+  - [x] M3-T3 Time/duration display + seekable progress control
   - [ ] M3-T4 End-to-end playback verification vs prototype
 
 ### M4 — Atomic UI components + showcase
