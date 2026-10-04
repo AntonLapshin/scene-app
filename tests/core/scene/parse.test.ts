@@ -149,9 +149,33 @@ describe("parseStaticScene", () => {
     expect(() => parseStaticScene({ ...staticSceneFixture, meta: {} })).toThrow(
       /staticScene.meta.name must be a string/,
     );
+    expect(() =>
+      parseStaticScene({ ...staticSceneFixture, meta: { ...staticSceneFixture.meta, world: { w: "x", h: 1 } } }),
+    ).toThrow(/staticScene.meta.world.w must be a number/);
+    expect(() =>
+      parseStaticScene({ ...staticSceneFixture, meta: { ...staticSceneFixture.meta, world: { w: 1040 } } }),
+    ).toThrow(/staticScene.meta.world.h must be a number/);
     expect(() => parseStaticScene({ ...staticSceneFixture, floor: null })).toThrow(
       /staticScene.floor must be an object/,
     );
+    expect(() =>
+      parseStaticScene({ ...staticSceneFixture, floor: { ...staticSceneFixture.floor, x: "x" } }),
+    ).toThrow(/staticScene.floor.x must be a number/);
+    expect(() =>
+      parseStaticScene({ ...staticSceneFixture, floor: { ...staticSceneFixture.floor, base: 5 } }),
+    ).toThrow(/staticScene.floor.base must be a string/);
+    expect(() =>
+      parseStaticScene({ ...staticSceneFixture, corridor: { ...staticSceneFixture.corridor, y: "y" } }),
+    ).toThrow(/staticScene.corridor.y must be a number/);
+    expect(() =>
+      parseStaticScene({ ...staticSceneFixture, corridor: { ...staticSceneFixture.corridor, color: 5 } }),
+    ).toThrow(/staticScene.corridor.color must be a string/);
+    expect(() =>
+      parseStaticScene({ ...staticSceneFixture, door: { ...staticSceneFixture.door, id: 5 } }),
+    ).toThrow(/staticScene.door.id must be a string/);
+    expect(() =>
+      parseStaticScene({ ...staticSceneFixture, door: { ...staticSceneFixture.door, label: 5 } }),
+    ).toThrow(/staticScene.door.label must be a string/);
     expect(() => parseStaticScene({ ...staticSceneFixture, walls: "x" })).toThrow(
       /staticScene.walls must be an array/,
     );
@@ -220,6 +244,15 @@ describe("parseLiveScene", () => {
     expect(() => parseLiveScene({ ...liveSceneFixture, meta: null })).toThrow(
       /liveScene.meta must be an object/,
     );
+    expect(() =>
+      parseLiveScene({ ...liveSceneFixture, meta: { scene: 5, tick: "seconds", defaultEmotion: "neutral" } }),
+    ).toThrow(/liveScene.meta.scene must be a string/);
+    expect(() =>
+      parseLiveScene({ ...liveSceneFixture, meta: { scene: "x", tick: 5, defaultEmotion: "neutral" } }),
+    ).toThrow(/liveScene.meta.tick must be a string/);
+    expect(() =>
+      parseLiveScene({ ...liveSceneFixture, meta: { scene: "x", tick: "seconds", defaultEmotion: 5 } }),
+    ).toThrow(/liveScene.meta.defaultEmotion must be a string/);
     expect(() => parseLiveScene({ ...liveSceneFixture, characters: "x" })).toThrow(
       /liveScene.characters must be an array/,
     );
@@ -232,6 +265,24 @@ describe("parseLiveScene", () => {
     expect(() =>
       parseLiveScene({ ...liveSceneFixture, characters: [{ ...liveSceneFixture.characters[0], look: {} }] }),
     ).toThrow(/liveScene.characters\[0\]\.look\.skin must be a string/);
+    expect(() =>
+      parseLiveScene({
+        ...liveSceneFixture,
+        characters: [{ ...liveSceneFixture.characters[0], look: { ...liveSceneFixture.characters[0].look, skin2: 5 } }],
+      }),
+    ).toThrow(/liveScene.characters\[0\]\.look\.skin2 must be a string/);
+    expect(() =>
+      parseLiveScene({
+        ...liveSceneFixture,
+        characters: [{ ...liveSceneFixture.characters[0], look: { ...liveSceneFixture.characters[0].look, hairStyle: 5 } }],
+      }),
+    ).toThrow(/liveScene.characters\[0\]\.look\.hairStyle must be a string/);
+    expect(() =>
+      parseLiveScene({
+        ...liveSceneFixture,
+        characters: [{ ...liveSceneFixture.characters[0], look: { ...liveSceneFixture.characters[0].look, shoes: 5 } }],
+      }),
+    ).toThrow(/liveScene.characters\[0\]\.look\.shoes must be a string/);
     expect(() =>
       parseLiveScene({ ...liveSceneFixture, characters: [{ ...liveSceneFixture.characters[0], visible: "yes" }] }),
     ).toThrow(/liveScene.characters\[0\]\.visible must be a boolean/);
