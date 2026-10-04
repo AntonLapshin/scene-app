@@ -61,9 +61,9 @@ Build a well-made, universal 2D scene replay engine that plays scenes defined de
   - Keep React hooks thin, calling core logic only
 
 **Sub-issues:**
-  - [ ] M2-T1 Core timeline evaluation (compute scene state at any timestamp from events: move/appear/emotion/say/caption, presence, visibility, order)
-  - [ ] M2-T2 Core helpers (asset lookup, coordinate math, id resolution, validation, duration)
-  - [ ] M2-T3 Achieve 100% coverage on src/core/**/*.ts (tests)
+  - [x] M2-T1 Core timeline evaluation (compute scene state at any timestamp from events: move/appear/emotion/say/caption, presence, visibility, order)
+  - [x] M2-T2 Core helpers (asset lookup, coordinate math, id resolution, validation, duration)
+  - [x] M2-T3 Achieve 100% coverage on src/core/**/*.ts (tests)
   - [ ] M2-T4 Thin React hooks calling core only
 
 ### M3 — Replay engine: playback controls and state driver
