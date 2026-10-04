@@ -26,3 +26,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dumb `SceneView` component in `src/ui/components` that renders a core `RenderState` as SVG: background layers (floor, corridor, back walls, windows, door, wall decor, floor decals, light patches) then foreground objects in paint order, using core draw operations as SVG primitives (rect/ellipse/line/text/image).
 - Characters render with their look palette (skin/hair/shirt/pants/shoes) and current emotion glyph; external image assets render as `<image>` when available with procedural fallback otherwise (via core `renderAsset`).
 - Image-availability adapter in `src/adapters/imageAvailability.ts` owning the impure browser `Image` I/O, keeping core pure.
+- Minimal `ShowcasePanel` component in `src/ui/components` demonstrating `SceneView` with a short description and its props listed.
+- `App` wired to load the office scene via `useOfficeScene` and render it through `ShowcasePanel`/`SceneView`, keeping the existing demo panel.
