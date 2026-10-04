@@ -4,8 +4,9 @@
 
 ## Status
 
-**Scaffolded** — the React + Tailwind + TypeScript skeleton is in place. Milestone M1
-planning is underway.
+**M1 in progress** — core M1 sub-issues (T1 typed models + parse, T2 initial-state
+computation, T3 asset renderer) are implemented and merged (#4/#5/#6). M1-T4
+(SceneView + App wiring + showcase) is planned and in flight.
 
 ## What's here
 
@@ -18,16 +19,19 @@ planning is underway.
 ## Planned work
 
 ### M1 — Vertical slice (in progress)
-- [ ] M1-T1 Core typed models + parse/validate scene JSON (#1)
-- [ ] M1-T2 Core initial-state computation at t=0 (#2)
-- [ ] M1-T3 Procedural asset rendering + external image support with fallback (#3)
-- [ ] M1-T4 SceneView component + App wiring + minimal showcase entry (planned next)
+- [x] M1-T1 Core typed models + parse/validate scene JSON (#1)
+- [x] M1-T2 Core initial-state computation at t=0 (#2)
+- [x] M1-T3 Procedural asset rendering + external image support with fallback (#3)
+- [ ] M1-T4 SceneView component + App wiring + minimal showcase entry
+  - [ ] M1-T4a Office scene data + typed parse (#7)
+  - [ ] M1-T4b SceneView component + view model rendering t=0 (#8)
+  - [ ] M1-T4c App wiring + minimal showcase entry (#9)
 
 ## Next steps
 
-- [ ] Implement M1-T1 through M1-T3 (in flight).
-- [ ] Plan M1-T4 and milestone M2 on the next PM turn.
-- [ ] Set up CI and GitHub Pages deployment.
+- [ ] Engineer implements M1-T4a/b/c (#7/#8/#9).
+- [ ] Plan milestone M2 (timeline evaluation) on the next PM turn.
+- [ ] CI passes on main; Pages deployment is blocked until Pages is enabled (#10).
 
 ## Changelog (CHANGELOG.md)
 
