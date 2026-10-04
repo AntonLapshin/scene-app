@@ -63,6 +63,21 @@ export function resolveCharacter(
   return found;
 }
 
+/**
+ * Resolve an asset by id, throwing a descriptive error when missing.
+ *
+ * Mirrors `resolveCharacter` for the asset side of the scene, giving callers a
+ * non-optional asset with explicit missing-asset handling.
+ */
+export function resolveAsset(
+  assets: readonly Asset[],
+  id: string,
+): Asset {
+  const found = lookupAssetById(assets, id);
+  if (!found) throw new Error(`Unknown asset id "${id}"`);
+  return found;
+}
+
 /** Euclidean distance between two points. */
 export function distance(
   a: readonly [number, number],
@@ -87,6 +102,45 @@ export function midpoint(
   b: readonly [number, number],
 ): [number, number] {
   return [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+}
+
+/**
+ * Clamp a value to the inclusive range `[min, max]`.
+ *
+ * When `min > max` the bounds are swapped so the result is always well-defined.
+ */
+export function clamp(value: number, min: number, max: number): number {
+  const lo = Math.min(min, max);
+  const hi = Math.max(min, max);
+  return Math.min(Math.max(value, lo), hi);
+}
+
+/**
+ * Clamp a timestamp to the scenario's playback window `[0, duration]`.
+ *
+ * Negative timestamps (before the first event) clamp to 0; timestamps past the
+ * final event clamp to the scenario duration.
+ */
+export function clampTimestamp(timestamp: number, duration: number): number {
+  return clamp(timestamp, 0, duration);
+}
+
+/**
+ * The effective duration of a scenario in seconds.
+ *
+ * Returns the declared `duration` when present, otherwise the timestamp of the
+ * latest event (or 0 for an empty timeline).
+ */
+export function scenarioDuration(scenario: {
+  duration?: number;
+  events: readonly { t: number }[];
+}): number {
+  if (typeof scenario.duration === "number") return scenario.duration;
+  let latest = 0;
+  for (const event of scenario.events) {
+    if (event.t > latest) latest = event.t;
+  }
+  return latest;
 }
 
 /**
