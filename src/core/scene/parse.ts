@@ -242,6 +242,7 @@ export function parseAsset(raw: unknown, path = "asset"): Asset {
     x: requireNumber(r.x, `${path}.x`),
     y: requireNumber(r.y, `${path}.y`),
     image: optionalString(r, "image", path),
+    w: optionalNumber(r, "w", path),
     t: optionalNumber(r, "t", path),
     d: optionalNumber(r, "d", path),
     h: optionalNumber(r, "h", path),

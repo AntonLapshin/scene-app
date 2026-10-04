@@ -19,3 +19,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the scaffold's malformed multi-line `package.json` description and `App.tsx` string so `npm install` and `npm run build` succeed.
 - Core initial-state computation (`computeInitialState`) in `src/core/scene/state.ts` returning the ordered t=0 render state: background layers, paint-ordered foreground objects (assets, front walls, visible characters), and visible characters with their live state.
 - Small pure helper functions: `assetSortKey`, `lookupAssetById`, `lookupCharacterById`, `resolveCharacter`, and coordinate math (`distance`, `manhattanDistance`, `midpoint`).
+- Core asset renderer (`renderAsset` / `drawProcedural`) in `src/core/scene/draw.ts` producing deterministic draw operations (rect/ellipse/line/text/image) for every fixed asset kind, with external-image support and procedural fallback when an image is missing or unavailable.
+- Added the missing optional `w` (width) field to the core `Asset` model.
