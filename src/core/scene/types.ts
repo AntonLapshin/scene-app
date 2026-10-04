@@ -284,6 +284,25 @@ export interface Character {
   look: CharacterLook;
 }
 
+/** An active speech/thought bubble shown above a character. */
+export interface SayBubble {
+  text: string;
+  kind: string;
+  /** Character emotion while speaking. */
+  emotion?: Emotion;
+  /** Absolute timestamp (seconds) when the bubble expires. */
+  until: number;
+}
+
+/**
+ * A character's live state at a given timestamp, including any active say
+ * bubble. Extends `Character` with optional, timeline-derived fields.
+ */
+export interface CharacterState extends Character {
+  /** Active say/thought bubble, if any. */
+  say?: SayBubble;
+}
+
 /** Live scene metadata. */
 export interface LiveMeta {
   scene: string;
@@ -395,5 +414,7 @@ export interface RenderState {
   /** Foreground objects ordered by paint order (back to front). */
   objects: RenderObject[];
   /** Characters visible at this timestamp, with their live state. */
-  characters: Character[];
+  characters: CharacterState[];
+  /** Active scene caption text, if any. */
+  caption?: string;
 }

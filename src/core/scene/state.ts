@@ -12,9 +12,11 @@
 import type {
   Asset,
   Character,
+  CharacterState,
   RenderState,
   RenderObject,
   Scene,
+  ScenarioEvent,
 } from "./types";
 
 /**
@@ -88,13 +90,18 @@ export function midpoint(
 }
 
 /**
- * Compute the render state at timestamp 0 from a parsed Scene.
+ * Compose the ordered render state from a set of character states.
  *
- * Characters use their initial live-scene state and only the visible ones are
- * included in the ordered foreground. Backgrounds are grouped for drawing.
+ * Groups the static background layers, paints the assets in paint order, adds
+ * front walls above the assets, and paints only visible characters above
+ * everything ordered by their y. Shared by `computeInitialState` and the
+ * timeline evaluation so both produce identical ordering.
  */
-export function computeInitialState(scene: Scene): RenderState {
-  const { staticScene, liveScene } = scene;
+export function composeRenderState(
+  scene: Scene,
+  characterStates: readonly CharacterState[],
+): RenderState {
+  const { staticScene } = scene;
   const background: RenderState["background"] = {
     floor: staticScene.floor,
     corridor: staticScene.corridor,
@@ -121,7 +128,7 @@ export function computeInitialState(scene: Scene): RenderState {
   }
 
   // Visible characters are painted above everything, ordered by their y.
-  const visibleCharacters = liveScene.characters.filter((c) => c.visible);
+  const visibleCharacters = characterStates.filter((c) => c.visible);
   for (const character of visibleCharacters) {
     objects.push({ kind: "character", sortKey: character.y, character });
   }
@@ -129,4 +136,131 @@ export function computeInitialState(scene: Scene): RenderState {
   objects.sort((a, b) => a.sortKey - b.sortKey);
 
   return { background, objects, characters: visibleCharacters };
+}
+
+/**
+ * Compute the render state at timestamp 0 from a parsed Scene.
+ *
+ * Characters use their initial live-scene state and only the visible ones are
+ * included in the ordered foreground. Backgrounds are grouped for drawing.
+ */
+export function computeInitialState(scene: Scene): RenderState {
+  return composeRenderState(scene, scene.liveScene.characters);
+}
+
+/**
+ * Compute the render state at an arbitrary timestamp by replaying the timeline
+ * events up to that point. Pure — no browser APIs. See `timeline.ts`.
+ */
+export function computeSceneState(scene: Scene, timestamp: number): RenderState {
+  const characters = computeCharacterStates(scene, timestamp);
+  const state = composeRenderState(scene, characters);
+  state.caption = activeCaptionAt(scene, timestamp);
+  return state;
+}
+
+/**
+ * Replay the timeline events up to `timestamp` and return each character's
+ * live state (position, emotion, visibility, active say bubble).
+ */
+export function computeCharacterStates(
+  scene: Scene,
+  timestamp: number,
+): CharacterState[] {
+  const byId = new Map<string, CharacterState>();
+  for (const character of scene.liveScene.characters) {
+    byId.set(character.id, character);
+  }
+
+  for (const event of eventsUpTo(scene.scenario, timestamp)) {
+    if (event.who === undefined) continue;
+    const current = byId.get(event.who);
+    if (!current) continue;
+    byId.set(event.who, applyEvent(current, event));
+  }
+
+  // Expire say bubbles whose window has ended.
+  const result: CharacterState[] = [];
+  for (const character of byId.values()) {
+    if (character.say && timestamp >= character.say.until) {
+      result.push({ ...character, say: undefined });
+    } else {
+      result.push(character);
+    }
+  }
+  return result;
+}
+
+/**
+ * Apply a single timeline event to a character's live state, returning a new
+ * state. `caption` events are no-ops for characters (they carry no `who`).
+ */
+export function applyEvent(
+  character: CharacterState,
+  event: ScenarioEvent,
+): CharacterState {
+  switch (event.type) {
+    case "appear":
+      return {
+        ...character,
+        visible: true,
+        x: event.at?.[0] ?? character.x,
+        y: event.at?.[1] ?? character.y,
+        dir: event.dir ?? character.dir,
+        emotion: event.emotion ?? character.emotion,
+      };
+    case "move":
+      return {
+        ...character,
+        x: event.to?.[0] ?? character.x,
+        y: event.to?.[1] ?? character.y,
+        dir: event.dir ?? character.dir,
+        emotion: event.emotion ?? character.emotion,
+      };
+    case "emotion":
+      return { ...character, emotion: event.set ?? character.emotion };
+    case "say":
+      return {
+        ...character,
+        emotion: event.emotion ?? character.emotion,
+        say: {
+          text: event.text ?? "",
+          kind: event.kind ?? "say",
+          emotion: event.emotion,
+          until: event.t + (event.dur ?? 0),
+        },
+      };
+    case "exit":
+      return { ...character, visible: false };
+    case "caption":
+      return character;
+  }
+}
+
+/**
+ * The timeline events with `t <= timestamp`, sorted by time (stable so equal
+ * timestamps keep source order).
+ */
+export function eventsUpTo(
+  scenario: { events: readonly ScenarioEvent[] },
+  timestamp: number,
+): ScenarioEvent[] {
+  return scenario.events
+    .filter((event) => event.t <= timestamp)
+    .sort((a, b) => a.t - b.t);
+}
+
+/**
+ * The active scene caption text at `timestamp`: the text of the latest
+ * `caption` event that has fired, or `undefined` when none has yet.
+ */
+export function activeCaptionAt(
+  scene: Scene,
+  timestamp: number,
+): string | undefined {
+  let caption: string | undefined;
+  for (const event of eventsUpTo(scene.scenario, timestamp)) {
+    if (event.type === "caption") caption = event.text;
+  }
+  return caption;
 }
