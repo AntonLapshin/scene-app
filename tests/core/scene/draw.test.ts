@@ -3,8 +3,10 @@ import {
   drawProcedural,
   renderAsset,
   defaultAssetSize,
+  characterDrawOps,
+  EMOTION_GLYPH,
 } from "../../../src/core/scene/draw";
-import type { Asset, AssetKind } from "../../../src/core/scene/types";
+import type { Asset, AssetKind, CharacterState } from "../../../src/core/scene/types";
 
 /** Every fixed asset kind the renderer must be able to draw. */
 const ALL_KINDS: AssetKind[] = [
@@ -135,5 +137,62 @@ describe("renderAsset", () => {
     const a = asset("rug", { image: "/sprites/rug.png" });
     const ops = renderAsset(a, () => true);
     expect(ops[0]).toMatchObject({ type: "image", w: 290, h: 215, src: "/sprites/rug.png" });
+  });
+});
+
+describe("characterDrawOps (M4-T2)", () => {
+  const base: CharacterState = {
+    id: "maya",
+    name: "Maya",
+    role: "New hire",
+    color: "#4f7cff",
+    x: 300,
+    y: 400,
+    dir: "down",
+    emotion: "happy",
+    visible: true,
+    prop: null,
+    look: {
+      skin: "#f2c79b",
+      skin2: "#e8b58a",
+      hair: "#5b3a1e",
+      hairStyle: "bob",
+      shirt: "#4f7cff",
+      shirt2: "#7fb6ff",
+      pants: "#2b3550",
+      shoes: "#222",
+    },
+  };
+
+  it("renders the look palette, emotion glyph and no say bubble", () => {
+    const ops = characterDrawOps(base);
+    expect(ops.some((o) => o.type === "rect" && o.fill === base.look.pants)).toBe(true);
+    expect(ops.some((o) => o.type === "rect" && o.fill === base.look.shirt)).toBe(true);
+    expect(ops.some((o) => o.type === "ellipse" && o.fill === base.look.skin)).toBe(true);
+    expect(ops.some((o) => o.type === "ellipse" && o.fill === base.look.hair)).toBe(true);
+    const glyph = ops.find((o) => o.type === "text" && o.text === EMOTION_GLYPH.happy);
+    expect(glyph).toBeTruthy();
+    // no say bubble
+    expect(ops.some((o) => o.type === "rect" && o.fill === "#fff")).toBe(false);
+  });
+
+  it("adds a say bubble when the character has an active say state", () => {
+    const withSay: CharacterState = {
+      ...base,
+      say: { text: "Hello!", kind: "say", emotion: "happy", until: 42 },
+    };
+    const ops = characterDrawOps(withSay);
+    const bubble = ops.find((o) => o.type === "rect" && o.fill === "#fff");
+    expect(bubble).toBeTruthy();
+    const bubbleText = ops.find((o) => o.type === "text" && o.text === "Hello!");
+    expect(bubbleText).toBeTruthy();
+  });
+
+  it("falls back to the neutral glyph for unknown emotions", () => {
+    const unknown = { ...base, emotion: "weird" as CharacterState["emotion"] };
+    const ops = characterDrawOps(unknown);
+    expect(
+      ops.some((o) => o.type === "text" && o.text === EMOTION_GLYPH.neutral),
+    ).toBe(true);
   });
 });
