@@ -10,4 +10,5 @@ export * from "./types";
 export * from "./guards";
 export * from "./parse";
 export * from "./state";
+export * from "./replay";
 export * from "./draw";
