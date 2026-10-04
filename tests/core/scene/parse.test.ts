@@ -162,17 +162,56 @@ describe("parseStaticScene", () => {
       parseStaticScene({ ...staticSceneFixture, floor: { ...staticSceneFixture.floor, x: "x" } }),
     ).toThrow(/staticScene.floor.x must be a number/);
     expect(() =>
+      parseStaticScene({ ...staticSceneFixture, floor: { ...staticSceneFixture.floor, y: "y" } }),
+    ).toThrow(/staticScene.floor.y must be a number/);
+    expect(() =>
+      parseStaticScene({ ...staticSceneFixture, floor: { ...staticSceneFixture.floor, w: "w" } }),
+    ).toThrow(/staticScene.floor.w must be a number/);
+    expect(() =>
+      parseStaticScene({ ...staticSceneFixture, floor: { ...staticSceneFixture.floor, h: "h" } }),
+    ).toThrow(/staticScene.floor.h must be a number/);
+    expect(() =>
+      parseStaticScene({ ...staticSceneFixture, floor: { ...staticSceneFixture.floor, plank: "p" } }),
+    ).toThrow(/staticScene.floor.plank must be a number/);
+    expect(() =>
+      parseStaticScene({ ...staticSceneFixture, floor: { ...staticSceneFixture.floor, tone: 5 } }),
+    ).toThrow(/staticScene.floor.tone must be a string/);
+    expect(() =>
       parseStaticScene({ ...staticSceneFixture, floor: { ...staticSceneFixture.floor, base: 5 } }),
     ).toThrow(/staticScene.floor.base must be a string/);
     expect(() =>
+      parseStaticScene({ ...staticSceneFixture, corridor: { ...staticSceneFixture.corridor, x: "x" } }),
+    ).toThrow(/staticScene.corridor.x must be a number/);
+    expect(() =>
       parseStaticScene({ ...staticSceneFixture, corridor: { ...staticSceneFixture.corridor, y: "y" } }),
     ).toThrow(/staticScene.corridor.y must be a number/);
+    expect(() =>
+      parseStaticScene({ ...staticSceneFixture, corridor: { ...staticSceneFixture.corridor, w: "w" } }),
+    ).toThrow(/staticScene.corridor.w must be a number/);
+    expect(() =>
+      parseStaticScene({ ...staticSceneFixture, corridor: { ...staticSceneFixture.corridor, h: "h" } }),
+    ).toThrow(/staticScene.corridor.h must be a number/);
     expect(() =>
       parseStaticScene({ ...staticSceneFixture, corridor: { ...staticSceneFixture.corridor, color: 5 } }),
     ).toThrow(/staticScene.corridor.color must be a string/);
     expect(() =>
       parseStaticScene({ ...staticSceneFixture, door: { ...staticSceneFixture.door, id: 5 } }),
     ).toThrow(/staticScene.door.id must be a string/);
+    expect(() =>
+      parseStaticScene({ ...staticSceneFixture, door: { ...staticSceneFixture.door, x: "x" } }),
+    ).toThrow(/staticScene.door.x must be a number/);
+    expect(() =>
+      parseStaticScene({ ...staticSceneFixture, door: { ...staticSceneFixture.door, y: "y" } }),
+    ).toThrow(/staticScene.door.y must be a number/);
+    expect(() =>
+      parseStaticScene({ ...staticSceneFixture, door: { ...staticSceneFixture.door, w: "w" } }),
+    ).toThrow(/staticScene.door.w must be a number/);
+    expect(() =>
+      parseStaticScene({ ...staticSceneFixture, door: { ...staticSceneFixture.door, h: "h" } }),
+    ).toThrow(/staticScene.door.h must be a number/);
+    expect(() =>
+      parseStaticScene({ ...staticSceneFixture, door: { ...staticSceneFixture.door, frame: 5 } }),
+    ).toThrow(/staticScene.door.frame must be a string/);
     expect(() =>
       parseStaticScene({ ...staticSceneFixture, door: { ...staticSceneFixture.door, label: 5 } }),
     ).toThrow(/staticScene.door.label must be a string/);
@@ -274,9 +313,33 @@ describe("parseLiveScene", () => {
     expect(() =>
       parseLiveScene({
         ...liveSceneFixture,
+        characters: [{ ...liveSceneFixture.characters[0], look: { ...liveSceneFixture.characters[0].look, hair: 5 } }],
+      }),
+    ).toThrow(/liveScene.characters\[0\]\.look\.hair must be a string/);
+    expect(() =>
+      parseLiveScene({
+        ...liveSceneFixture,
         characters: [{ ...liveSceneFixture.characters[0], look: { ...liveSceneFixture.characters[0].look, hairStyle: 5 } }],
       }),
     ).toThrow(/liveScene.characters\[0\]\.look\.hairStyle must be a string/);
+    expect(() =>
+      parseLiveScene({
+        ...liveSceneFixture,
+        characters: [{ ...liveSceneFixture.characters[0], look: { ...liveSceneFixture.characters[0].look, shirt: 5 } }],
+      }),
+    ).toThrow(/liveScene.characters\[0\]\.look\.shirt must be a string/);
+    expect(() =>
+      parseLiveScene({
+        ...liveSceneFixture,
+        characters: [{ ...liveSceneFixture.characters[0], look: { ...liveSceneFixture.characters[0].look, shirt2: 5 } }],
+      }),
+    ).toThrow(/liveScene.characters\[0\]\.look\.shirt2 must be a string/);
+    expect(() =>
+      parseLiveScene({
+        ...liveSceneFixture,
+        characters: [{ ...liveSceneFixture.characters[0], look: { ...liveSceneFixture.characters[0].look, pants: 5 } }],
+      }),
+    ).toThrow(/liveScene.characters\[0\]\.look\.pants must be a string/);
     expect(() =>
       parseLiveScene({
         ...liveSceneFixture,
