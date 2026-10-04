@@ -4,9 +4,13 @@ import {
   lookupAssetById,
   lookupCharacterById,
   resolveCharacter,
+  resolveAsset,
   distance,
   manhattanDistance,
   midpoint,
+  clamp,
+  clampTimestamp,
+  scenarioDuration,
   computeInitialState,
 } from "../../../src/core/scene/state";
 import { sceneFixture } from "./fixtures";
@@ -62,6 +66,11 @@ describe("lookup helpers", () => {
     expect(resolveCharacter(chars, "c1").id).toBe("c1");
     expect(() => resolveCharacter(chars, "ghost")).toThrow(/Unknown character id "ghost"/);
   });
+
+  it("resolveAsset resolves or throws on a missing asset", () => {
+    expect(resolveAsset(assets, "a1").id).toBe("a1");
+    expect(() => resolveAsset(assets, "ghost")).toThrow(/Unknown asset id "ghost"/);
+  });
 });
 
 describe("coordinate math", () => {
@@ -76,6 +85,31 @@ describe("coordinate math", () => {
 
   it("computes midpoints", () => {
     expect(midpoint([0, 0], [10, 20])).toEqual([5, 10]);
+  });
+
+  it("clamps a value to an inclusive range", () => {
+    expect(clamp(5, 0, 10)).toBe(5);
+    expect(clamp(-3, 0, 10)).toBe(0);
+    expect(clamp(20, 0, 10)).toBe(10);
+    expect(clamp(5, 10, 0)).toBe(5);
+  });
+
+  it("clampTimestamp clamps to [0, duration]", () => {
+    expect(clampTimestamp(-5, 41)).toBe(0);
+    expect(clampTimestamp(41, 41)).toBe(41);
+    expect(clampTimestamp(100, 41)).toBe(41);
+    expect(clampTimestamp(3, 41)).toBe(3);
+  });
+});
+
+describe("scenarioDuration", () => {
+  it("returns the declared duration when present", () => {
+    expect(scenarioDuration({ duration: 41, events: [] })).toBe(41);
+  });
+
+  it("falls back to the latest event timestamp when duration is absent", () => {
+    expect(scenarioDuration({ events: [{ t: 3 }, { t: 9.9 }] })).toBe(9.9);
+    expect(scenarioDuration({ events: [] })).toBe(0);
   });
 });
 
