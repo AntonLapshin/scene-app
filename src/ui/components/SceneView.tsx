@@ -8,6 +8,7 @@ import type {
   WallDecor,
   FloorDecal,
 } from "../../core/scene";
+import { characterDrawOps } from "../../core/scene";
 import { Sprite } from "./atoms/Sprite";
 
 export interface SceneViewProps {
@@ -109,54 +110,14 @@ function FloorDecalElement({ decal }: { decal: FloorDecal }) {
   return <AssetElement asset={asset} imageAvailable={() => false} />;
 }
 
-/** A small emotion glyph shown above a character's head. */
-const EMOTION_GLYPH: Record<string, string> = {
-  neutral: "·",
-  happy: "☺",
-  excited: "★",
-  nervous: "~",
-  surprised: "!",
-  shy: "☁",
-  confident: "▲",
-  proud: "♛",
-  sad: "☹",
-  annoyed: "#",
-  thinking: "?",
-};
-
-/** Render a character with its look palette and current emotion. */
+/** Render a character with its look palette, emotion glyph and say bubble. */
 function CharacterElement({ character }: { character: Character }) {
-  const { x, y, look, emotion } = character;
-  const cx = x;
-  const cy = y;
-  const body = 26;
-  const headR = 11;
-  const headCy = cy - body - headR;
   return (
-    <g data-character={character.id} transform={`translate(${cx},${cy})`}>
-      {/* legs / shoes */}
-      <rect x={-8} y={-body + 8} width={7} height={10} fill={look.pants} />
-      <rect x={1} y={-body + 8} width={7} height={10} fill={look.pants} />
-      <rect x={-9} y={-body + 16} width={9} height={4} fill={look.shoes} rx={1} />
-      <rect x={0} y={-body + 16} width={9} height={4} fill={look.shoes} rx={1} />
-      {/* torso / shirt */}
-      <rect x={-11} y={-body} width={22} height={14} fill={look.shirt} rx={3} />
-      <rect x={-11} y={-body} width={22} height={6} fill={look.shirt2} rx={3} />
-      {/* head */}
-      <circle cx={0} cy={headCy} r={headR} fill={look.skin} />
-      <path
-        d={`M ${-headR} ${headCy + headR * 0.4} Q 0 ${headCy - headR * 1.2} ${headR} ${headCy + headR * 0.4} Z`}
-        fill={look.hair}
-      />
-      {/* emotion glyph */}
-      <text
-        y={headCy - headR - 6}
-        textAnchor="middle"
-        fontSize={12}
-        fill="#2b3550"
-      >
-        {EMOTION_GLYPH[emotion] ?? EMOTION_GLYPH.neutral}
-      </text>
+    <g
+      data-character={character.id}
+      transform={`translate(${character.x},${character.y})`}
+    >
+      <Sprite ops={characterDrawOps(character)} />
     </g>
   );
 }

@@ -44,7 +44,7 @@ describe("SceneView", () => {
     const g = container.querySelector(`[data-character="${maya.id}"]`)!;
     expect(g).not.toBeNull();
     expect(g.querySelectorAll("rect")).toHaveLength(6); // pants/shoes + torso/shirt2/shirt
-    expect(g.querySelectorAll("circle")).toHaveLength(1); // head
+    expect(g.querySelectorAll("ellipse")).toHaveLength(2); // head + hair dome
     // emotion glyph rendered
     expect(g.querySelector("text")!.textContent).toBeTruthy();
   });

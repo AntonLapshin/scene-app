@@ -11,7 +11,7 @@
  * The same asset + params always produces the same output.
  */
 
-import type { Asset, AssetKind } from "./types";
+import type { Asset, AssetKind, CharacterState } from "./types";
 
 /* ── Draw operation model ─────────────────────────────────────────── */
 
@@ -434,4 +434,94 @@ export function renderAsset(
     return [image({ x: asset.x, y: asset.y, w, h, src: asset.image })];
   }
   return drawProcedural(asset);
+}
+
+/* ── Character rendering ──────────────────────────────────────────── */
+
+/** Emotion → glyph mapping, used for the small glyph above a head. */
+export const EMOTION_GLYPH: Record<string, string> = {
+  neutral: "·",
+  happy: "☺",
+  excited: "★",
+  nervous: "~",
+  surprised: "!",
+  shy: "☁",
+  confident: "▲",
+  proud: "♛",
+  sad: "☹",
+  annoyed: "#",
+  thinking: "?",
+};
+
+/** Default body geometry for a character (local coords, feet at origin). */
+const BODY = 26;
+const HEAD_R = 11;
+
+/**
+ * Produce the deterministic draw ops for a character (M4-T2).
+ *
+ * Pure and side-effect free: the same character state always produces the same
+ * ops, in character-local coordinates (origin at the feet center) so callers
+ * can translate the result into place. Draws the look palette (pants, shoes,
+ * shirt, skin, hair), the emotion glyph, and any active say bubble.
+ */
+export function characterDrawOps(character: CharacterState): DrawOp[] {
+  const { look, emotion, say } = character;
+  const headCy = -BODY - HEAD_R;
+  const ops: DrawOp[] = [
+    // legs / shoes
+    rect({ x: -8, y: -BODY + 8, w: 7, h: 10, fill: look.pants }),
+    rect({ x: 1, y: -BODY + 8, w: 7, h: 10, fill: look.pants }),
+    rect({ x: -9, y: -BODY + 16, w: 9, h: 4, fill: look.shoes, rx: 1 }),
+    rect({ x: 0, y: -BODY + 16, w: 9, h: 4, fill: look.shoes, rx: 1 }),
+    // torso / shirt
+    rect({ x: -11, y: -BODY, w: 22, h: 14, fill: look.shirt, rx: 3 }),
+    rect({ x: -11, y: -BODY, w: 22, h: 6, fill: look.shirt2, rx: 3 }),
+    // head (ellipse with rx === ry draws a circle)
+    ellipse({ cx: 0, cy: headCy, rx: HEAD_R, ry: HEAD_R, fill: look.skin }),
+    // hair dome
+    ellipse({
+      cx: 0,
+      cy: headCy - HEAD_R * 0.35,
+      rx: HEAD_R,
+      ry: HEAD_R * 0.85,
+      fill: look.hair,
+    }),
+    // emotion glyph
+    text({
+      x: 0,
+      y: headCy - HEAD_R - 6,
+      text: EMOTION_GLYPH[emotion] ?? EMOTION_GLYPH.neutral,
+      fill: "#2b3550",
+      fontSize: 12,
+    }),
+  ];
+
+  // Active say/thought bubble above the head.
+  if (say) {
+    const bubbleW = 60 + say.text.length * 3;
+    const bubbleH = 20;
+    const bx = -bubbleW / 2;
+    const by = headCy - HEAD_R - 26;
+    ops.push(
+      rect({
+        x: bx,
+        y: by,
+        w: bubbleW,
+        h: bubbleH,
+        fill: "#fff",
+        stroke: "#c4cde0",
+        rx: 8,
+      }),
+      text({
+        x: 0,
+        y: by + bubbleH / 2,
+        text: say.text,
+        fill: "#2b3550",
+        fontSize: 11,
+      }),
+    );
+  }
+
+  return ops;
 }
