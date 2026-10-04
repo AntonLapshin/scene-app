@@ -44,6 +44,12 @@ Build a well-made, universal 2D scene replay engine that plays scenes defined de
   - Draw each asset with external image support and a procedural fallback when the image is missing
   - Wire the scene through a thin React component tree (App -> SceneView) with a minimal showcase entry
 
+**Sub-issues:**
+  - [ ] M1-T1 Core typed models + parse/validate scene JSON (STATIC_SCENE, LIVE_SCENE, SCENARIO)
+  - [ ] M1-T2 Core initial-state computation at t=0 (backgrounds, objects, characters positioned per initial state)
+  - [ ] M1-T3 Procedural asset rendering + external image support with fallback
+  - [ ] M1-T4 SceneView component + App wiring + minimal showcase entry
+
 ### M2 — Core pure logic: timeline evaluation with 100% coverage
 
 **Goal:** Extract all scene mechanics into small independent pure functions in src/core — timeline evaluation, state computation per timestamp, and helpers — fully tested.
@@ -53,6 +59,12 @@ Build a well-made, universal 2D scene replay engine that plays scenes defined de
   - Extract helpers (asset lookup, coordinate math, id resolution, validation) as small independent pure functions
   - Achieve and enforce 100% test coverage on src/core/**/*.ts
   - Keep React hooks thin, calling core logic only
+
+**Sub-issues:**
+  - [ ] M2-T1 Core timeline evaluation (compute scene state at any timestamp from events: move/appear/emotion/say/caption, presence, visibility, order)
+  - [ ] M2-T2 Core helpers (asset lookup, coordinate math, id resolution, validation, duration)
+  - [ ] M2-T3 Achieve 100% coverage on src/core/**/*.ts (tests)
+  - [ ] M2-T4 Thin React hooks calling core only
 
 ### M3 — Replay engine: playback controls and state driver
 
@@ -64,6 +76,12 @@ Build a well-made, universal 2D scene replay engine that plays scenes defined de
   - Display the current time and total duration with a seekable progress control
   - Drive the scene render from the replay state and verify end-to-end playback matches the prototype
 
+**Sub-issues:**
+  - [ ] M3-T1 Replay driver (advance time, recompute state each frame/step)
+  - [ ] M3-T2 Playback controls (play/pause/seek/step)
+  - [ ] M3-T3 Time/duration display + seekable progress control
+  - [ ] M3-T4 End-to-end playback verification vs prototype
+
 ### M4 — Atomic UI components + showcase
 
 **Goal:** Refactor the UI into Atomic-design components (atoms/molecules/organisms), each showcased in the showcase library, using Context injection.
@@ -73,6 +91,13 @@ Build a well-made, universal 2D scene replay engine that plays scenes defined de
   - Compose organisms (SceneStage, PlaybackBar, SceneInfoPanel) and pages from these components
   - Inject dependencies (replay state, theme) via Context injection pattern rather than prop drilling
   - Add showcase entries for every component, documenting props and states
+
+**Sub-issues:**
+  - [ ] M4-T1 Extract reusable atoms (buttons, sliders, badges, sprites)
+  - [ ] M4-T2 Extract reusable molecules (playback controls, character card, timeline scrubber)
+  - [ ] M4-T3 Compose organisms (SceneStage, PlaybackBar, SceneInfoPanel) and pages
+  - [ ] M4-T4 Context injection (replay state, theme) instead of prop drilling
+  - [ ] M4-T5 Showcase entries for every component
 
 ### M5 — Theming and polish
 
@@ -84,6 +109,12 @@ Build a well-made, universal 2D scene replay engine that plays scenes defined de
   - Polish layout, responsive sizing, and visual consistency of the scene stage and controls
   - Add showcase entries for theme variants and edge states
 
+**Sub-issues:**
+  - [ ] M5-T1 Theme pattern (design tokens) applied across all components
+  - [ ] M5-T2 Edge cases (missing assets, malformed JSON, empty timeline, out-of-range timestamps)
+  - [ ] M5-T3 Layout/responsive sizing polish
+  - [ ] M5-T4 Showcase entries for theme variants and edge states
+
 ### M6 — Final integration, deployment, and docs
 
 **Goal:** Ship the completed engine: integrate all parts, ensure CI passes, deploy a live demo to GitHub Pages, and document usage.
@@ -93,3 +124,9 @@ Build a well-made, universal 2D scene replay engine that plays scenes defined de
   - Deploy a live demo of the office scene to GitHub Pages
   - Write README and usage docs for authoring scenes and embedding the player
   - Final end-to-end verification of the replay engine and showcase
+
+**Sub-issues:**
+  - [ ] M6-T1 Ensure test (100% core coverage), lint, and build all pass in CI
+  - [ ] M6-T2 Deploy live demo of the office scene to GitHub Pages
+  - [ ] M6-T3 README + usage docs (authoring scenes, embedding the player)
+  - [ ] M6-T4 Final end-to-end verification of replay engine and showcase
