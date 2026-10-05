@@ -7,6 +7,5 @@
 export { SceneStage } from "./SceneStage";
 export type { SceneStageProps } from "./SceneStage";
 export { PlaybackBar } from "./PlaybackBar";
-export type { PlaybackBarProps } from "./PlaybackBar";
 export { SceneInfoPanel } from "./SceneInfoPanel";
 export type { SceneInfoPanelProps } from "./SceneInfoPanel";

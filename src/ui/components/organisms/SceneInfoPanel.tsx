@@ -1,32 +1,28 @@
-import type { CharacterState } from "../../../core/scene";
+import { useReplay } from "../../context";
 import { CharacterCard } from "../molecules/CharacterCard";
 import { Badge } from "../atoms/Badge";
 
 export interface SceneInfoPanelProps {
-  /** The visible characters (from core render state) to show as cards. */
-  characters: CharacterState[];
   /** Scene name shown as a metadata badge. */
   title: string;
   /** Scene visual style shown as a metadata badge. */
   style: string;
-  /** Scenario duration (seconds) shown as a metadata badge. */
-  duration: number;
 }
 
 /**
- * SceneInfoPanel organism (M4-T3).
+ * SceneInfoPanel organism (M4-T3, refactored M4-T4).
  *
  * Composes `CharacterCard`s for the visible characters plus a row of scene
- * metadata `Badge`s (name, style, duration, character count). It is thin and
- * dumb: it contains no business logic — it only renders props and composes the
- * molecule/atom. All derivation stays in core/view models.
+ * metadata `Badge`s (name, style, duration, character count). It reads the
+ * visible characters and duration from `ReplayContext` via `useReplay()` and is
+ * otherwise thin and dumb: it contains no business logic — it only renders
+ * context values and composes the molecule/atom. All derivation stays in
+ * core/view models.
  */
-export function SceneInfoPanel({
-  characters,
-  title,
-  style,
-  duration,
-}: SceneInfoPanelProps) {
+export function SceneInfoPanel({ title, style }: SceneInfoPanelProps) {
+  const { renderState, duration } = useReplay();
+  const characters = renderState.characters;
+
   return (
     <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
       <h2 className="text-xl font-semibold text-slate-900">Scene info</h2>
