@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import type { Scene } from "../../core/scene";
 import { computeInitialState } from "../../core/scene";
+import { useTheme } from "../context";
 import { ShowcasePanel } from "../components/ShowcasePanel";
 import {
   ButtonShowcase,
@@ -35,17 +36,18 @@ export function ShowcasePage({ scene }: { scene: Scene }) {
     }),
     [scene],
   );
+  const { tokens } = useTheme();
 
   return (
     <div className="w-full space-y-6">
-      <h1 className="text-2xl font-bold text-slate-900">Component showcase</h1>
-      <p className="text-sm text-slate-600">
+      <h1 className={`text-2xl font-bold ${tokens.foreground}`}>Component showcase</h1>
+      <p className={`text-sm ${tokens.textMuted}`}>
         Every atom, molecule and organism with a documented, representative
         state.
       </p>
 
       <section className="space-y-6">
-        <h2 className="text-lg font-semibold text-slate-800">Atoms</h2>
+        <h2 className={`text-lg font-semibold ${tokens.foreground}`}>Atoms</h2>
         <div className="grid gap-6 lg:grid-cols-2">
           <ButtonShowcase />
           <SliderShowcase />
@@ -55,7 +57,7 @@ export function ShowcasePage({ scene }: { scene: Scene }) {
       </section>
 
       <section className="space-y-6">
-        <h2 className="text-lg font-semibold text-slate-800">Molecules</h2>
+        <h2 className={`text-lg font-semibold ${tokens.foreground}`}>Molecules</h2>
         <div className="grid gap-6 lg:grid-cols-2">
           <PlaybackControlsShowcase />
           <CharacterCardShowcase />
@@ -64,7 +66,7 @@ export function ShowcasePage({ scene }: { scene: Scene }) {
       </section>
 
       <section className="space-y-6">
-        <h2 className="text-lg font-semibold text-slate-800">Organisms</h2>
+        <h2 className={`text-lg font-semibold ${tokens.foreground}`}>Organisms</h2>
         <div className="grid gap-6 lg:grid-cols-2">
           <SceneStageShowcase />
           <PlaybackBarShowcase />
@@ -73,7 +75,7 @@ export function ShowcasePage({ scene }: { scene: Scene }) {
       </section>
 
       <section className="space-y-6">
-        <h2 className="text-lg font-semibold text-slate-800">SceneView</h2>
+        <h2 className={`text-lg font-semibold ${tokens.foreground}`}>SceneView</h2>
         <ShowcasePanel
           title="SceneView · Office scene at t=0"
           description="The office scene rendered at timestamp 0."

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { useTheme } from "../context";
 
 /**
  * ShowcaseEntry (M4-T5).
@@ -25,19 +26,20 @@ export function ShowcaseEntry({
   description,
   children,
 }: ShowcaseEntryProps) {
+  const { tokens } = useTheme();
   return (
     <section
       data-showcase={name}
-      className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm"
+      className={`${tokens.radius} ${tokens.border} ${tokens.surface} p-6 shadow-sm`}
     >
-      <h3 className="text-lg font-semibold text-slate-900">{name}</h3>
+      <h3 className={`text-lg font-semibold ${tokens.foreground}`}>{name}</h3>
       {description && (
-        <p className="mt-1 text-sm text-slate-600">{description}</p>
+        <p className={`mt-1 text-sm ${tokens.textMuted}`}>{description}</p>
       )}
 
       <dl className="mt-3 text-sm">
-        <dt className="text-slate-500">Props</dt>
-        <dd className="mt-0.5 font-mono text-xs text-slate-500">{props}</dd>
+        <dt className={tokens.textSubtle}>Props</dt>
+        <dd className={`mt-0.5 font-mono text-xs ${tokens.textSubtle}`}>{props}</dd>
       </dl>
 
       <div className="mt-4">{children}</div>
