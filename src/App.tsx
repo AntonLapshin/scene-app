@@ -1,12 +1,19 @@
 import { useMemo, useState } from "react";
 import { DemoPanel } from "./ui/components/DemoPanel";
 import { Button } from "./ui/components/atoms/Button";
+import { SceneLoadError } from "./ui/components/SceneLoadError";
 import { PlaybackPage } from "./ui/pages/PlaybackPage";
 import { ShowcasePage } from "./ui/pages/ShowcasePage";
 import { ReplayProvider } from "./ui/context/ReplayProvider";
 import { ThemeProvider } from "./ui/context/ThemeProvider";
 import { useTheme } from "./ui/context";
-import { loadOfficeScene } from "./data/officeScene";
+import { parseSceneBundle, type Scene } from "./core/scene";
+import { loadOfficeScene, officeSceneData } from "./data/officeScene";
+
+export interface AppProps {
+  /** The raw scene bundle to load. Defaults to the bundled office scene. */
+  rawScene?: unknown;
+}
 
 /**
  * AppContent (M5-T1).
@@ -17,13 +24,13 @@ import { loadOfficeScene } from "./data/officeScene";
  * component). All derivation happens in view models / context / core — no
  * business logic lives here.
  */
-export function AppContent() {
-  const scene = useMemo(() => loadOfficeScene(), []);
+export function AppContent({ scene }: { scene?: Scene } = {}) {
+  const sceneValue = useMemo(() => scene ?? loadOfficeScene(), [scene]);
   const [view, setView] = useState<"playback" | "showcase">("playback");
   const { tokens } = useTheme();
 
   return (
-    <ReplayProvider scene={scene}>
+    <ReplayProvider scene={sceneValue}>
       <main className={`flex min-h-screen items-center justify-center ${tokens.background} p-6`}>
         <div className="w-full space-y-6">
           <DemoPanel
@@ -49,9 +56,9 @@ export function AppContent() {
             </Button>
           </nav>
           {view === "playback" ? (
-            <PlaybackPage scene={scene} />
+            <PlaybackPage scene={sceneValue} />
           ) : (
-            <ShowcasePage scene={scene} />
+            <ShowcasePage scene={sceneValue} />
           )}
         </div>
       </main>
@@ -62,15 +69,30 @@ export function AppContent() {
 /**
  * App root.
  *
- * Wraps the tree in the thin `ThemeProvider` (injecting the design-token
- * surface via `ThemeContext`) and `ReplayProvider` (injecting replay state via
- * `ReplayContext`), then renders the themed content. All derivation happens in
- * view models / context / core — no business logic lives here.
+ * Loads the scene via the core `parseSceneBundle` (which returns a result
+ * instead of throwing) and wraps the tree in the thin `ThemeProvider`
+ * (injecting the design-token surface via `ThemeContext`) and `ReplayProvider`
+ * (injecting replay state via `ReplayContext`). If the scene fails to parse, a
+ * clear user-facing `SceneLoadError` is rendered instead of a blank crash. All
+ * derivation happens in view models / context / core — no business logic lives
+ * here.
  */
-export default function App() {
+export default function App({ rawScene = officeSceneData }: AppProps) {
+  const result = useMemo(() => parseSceneBundle(rawScene), [rawScene]);
+
+  if (!result.ok) {
+    return (
+      <ThemeProvider>
+        <main className="flex min-h-screen items-center justify-center bg-slate-100 p-6">
+          <SceneLoadError message={result.error} />
+        </main>
+      </ThemeProvider>
+    );
+  }
+
   return (
     <ThemeProvider>
-      <AppContent />
+      <AppContent scene={result.scene} />
     </ThemeProvider>
   );
 }

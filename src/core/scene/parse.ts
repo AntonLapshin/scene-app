@@ -27,6 +27,7 @@ import {
   type LiveScene,
   type Scenario,
   type ScenarioEvent,
+  type Scene,
   type StaticMeta,
   type StaticScene,
   type Wall,
@@ -401,4 +402,46 @@ export function parseScenario(raw: unknown): Scenario {
       parseEvent(e, `scenario.events[${i}]`),
     ),
   };
+}
+
+/* ── Scene bundle parsing (M5-T2) ─────────────────────────────────── */
+
+/** Successful parse of a scene bundle. */
+export interface SceneParseOk {
+  ok: true;
+  scene: Scene;
+}
+
+/** Failed parse of a scene bundle, with a descriptive message. */
+export interface SceneParseErr {
+  ok: false;
+  error: string;
+}
+
+/** Result of parsing a scene bundle: either a typed `Scene` or an error. */
+export type SceneParseResult = SceneParseOk | SceneParseErr;
+
+/**
+ * Parse a whole scene bundle `{ staticScene, liveScene, scenario }` into a
+ * typed `Scene`, or return a descriptive error instead of throwing.
+ *
+ * This is the entry point used by the app when loading a scene, so a malformed
+ * bundle produces a clear, user-facing error (rendered by the UI) rather than
+ * a blank crash. It is pure — no React, no DOM.
+ */
+export function parseSceneBundle(raw: unknown): SceneParseResult {
+  try {
+    const root = requireRecord(raw, "scene");
+    const scene: Scene = {
+      staticScene: parseStaticScene(root.staticScene),
+      liveScene: parseLiveScene(root.liveScene),
+      scenario: parseScenario(root.scenario),
+    };
+    return { ok: true, scene };
+  } catch (err) {
+    return {
+      ok: false,
+      error: err instanceof Error ? err.message : "Unknown scene parse error",
+    };
+  }
 }
