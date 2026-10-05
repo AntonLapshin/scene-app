@@ -1,18 +1,15 @@
 # Scene
 
-ws/scene/prototype.html contains a web app prototype of the "scene" project that allows to define and replay scenarios with characters on a specific scene. The scene has
-image assets, static objects definition, characters, and the timeline. The scene can be replayed. Your goal is to extract this into a well built web app, use bun as a bundler and
-runner. Use TypeScript, Use React. Use https://github.com/AntonLapshin/showcase to build "storybook"-like showcases for all the components. Focus on quality, reusability. Follow the
-Atomic design pattern, extract components https://raw.githubusercontent.com/AntonLapshin/ape-kingdom/refs/heads/main/guidelines/GUIDELINES-WEB-ATOMIC-DESIGN.md and use Context
-injection pattern: https://raw.githubusercontent.com/AntonLapshin/ape-kingdom/refs/heads/main/guidelines/GUIDELINES-WEB-CONTEXT-INJECTION.md and theme pattern:
-https://raw.githubusercontent.com/AntonLapshin/ape-kingdom/refs/heads/main/guidelines/GUIDELINES-WEB-THEME.md
+**Scene** is a universal 2D **scene replay engine**. It plays scenes defined
+declaratively via JSON bundles (a `staticScene` of geometry and fixed assets, a
+`liveScene` of characters, and a `scenario` timeline of events) and renders them
+per timestamp. It was extracted from the `ws/scene/prototype.html` web app
+prototype and ships the single office scene from that prototype as a live demo.
 
-Extract logic into small independents pure functions with 100% test coverage - core of the mehcanics and helper functions. This is the foundation layer - reusable low level pure
-functions. Then higher level logic that manipulate state. The goal is to always extract logic from the UI and let the UI components be simple and focus on UI only. React hooks should
-be simple too, they should rather call core logic or helper functions if the logic is required.
-
-The goal of this project is to built a well made scene replay engine that can play a scene that is defined declaratively via json objects and assets. This scene player should be
-universal and could play any 2d scene.
+The engine computes state per timestamp (discrete snap movement, visual-only)
+and renders it as SVG. All business logic lives in pure, independently testable
+functions in `src/core` with 100% coverage; the UI is a thin layer that renders
+what core computes.
 
 > Generated and maintained by [auto-pi](https://github.com/AntonLapshin/auto-pi) — an
 > autonomous engineering team harness for Pi.
@@ -50,30 +47,91 @@ npm run dev     # start the dev server
 The project enforces a strict **core / UI split** (plan.md §19.1):
 
 - `src/core/**` — pure business logic, no React, no DOM. **100% test coverage is
-  required here.**
+  required here.** Models, parsing, state computation, replay and asset
+  rendering all live here as small independent pure functions.
 - `src/ui/**` — thin, dumb view layer (components + view models). Contains no
-  business logic; it only renders what `src/core` provides.
+  business logic; it only renders what `src/core` provides. Follows Atomic
+  design (`atoms`, `molecules`, `organisms`, pages), Context injection
+  (`ReplayProvider`/`useReplay`, `ThemeProvider`/`useTheme`), and a theme
+  pattern (design tokens in `src/ui/context/theme.ts`). Every component is
+  showcased via the showcase library (`ShowcasePage`).
+- `src/adapters/**` — impure I/O (e.g. the external-image availability check).
+
+## Scene JSON format
+
+A scene bundle is a plain JSON object with three sections. See
+[`docs/usage.md`](docs/usage.md) for the full authoring guide and a complete
+example.
+
+```json
+{
+  "staticScene": { "meta": { "world": { "w": 1040, "h": 730 }, "...": "..." }, "assets": [ "...asset entries..." ] },
+  "liveScene":  { "characters": [ "...character entries..." ] },
+  "scenario":   { "duration": 41, "events": [ "...timeline events..." ] }
+}
+```
+
+- **`staticScene`** — the room geometry and fixed objects: world size, floor,
+  corridor, walls, windows, door, wall decor, floor decals, light patches, and
+  the **assets**. Supported asset kinds are a fixed set from the prototype:
+  furniture (`desk`, `roundTable`, `chair`, `stool`, `sofa`, `cabinet`,
+  `counter`, `crates`, `printer`, `waterCooler`, `coffeeMachine`, `kettle`,
+  `cupRow`, `cup`, `papers`, `laptop`, `lamp`, `deskSign`, `plant`), wall decor
+  (`whiteboard`, `clock`, `poster`) and floor decals (`rug`, `zone`). Each asset
+  may reference an optional external `image`; when missing, the engine falls
+  back to procedural drawing.
+- **`liveScene`** — the characters and their initial state (position, facing
+  direction `up|down|left|right`, emotion, visibility, held prop, appearance
+  palette).
+- **`scenario`** — the timeline of events. Supported event types are `caption`,
+  `appear`, `move`, `emotion`, `say` and `exit`. Characters move by **discrete
+  snap** (no interpolation), and playback is **visual-only** (no audio).
+
+The bundled office scene data lives in `src/data/officeScene.ts` and is the
+canonical, verified example of the format.
+
+## Embedding the player
+
+There are three ways to embed the player in your own app. Full examples are in
+[`docs/usage.md`](docs/usage.md).
+
+1. **Quick path** — pass a raw bundle to `App`:
+   ```tsx
+   <App rawScene={mySceneJson} />
+   ```
+   `App` parses it with core `parseSceneBundle`, wraps the tree in
+   `ThemeProvider` + `ReplayProvider`, and renders the `PlaybackPage` (or a
+   `SceneLoadError` panel on invalid input).
+
+2. **Composed path** — parse the scene yourself and compose `ReplayProvider` +
+   `PlaybackPage`:
+   ```tsx
+   import { loadOfficeScene } from "./data/officeScene"; // validates the office bundle
+   import { ReplayProvider } from "./ui/context/ReplayProvider";
+   import { PlaybackPage } from "./ui/pages/PlaybackPage";
+
+   <ReplayProvider scene={scene}>
+     <PlaybackPage scene={scene} />
+   </ReplayProvider>
+   ```
+   `loadOfficeScene()` parses the bundled office scene; `parseSceneBundle(raw)`
+   parses any bundle and returns a result instead of throwing.
+
+3. **Manual path** — compute a `RenderState` from core and render the dumb
+   `SceneView` component:
+   ```tsx
+   import { computeSceneState } from "./core/scene";
+   import { SceneView } from "./ui/components/SceneView";
+
+   const renderState = computeSceneState(scene, timestamp);
+   <SceneView renderState={renderState} world={scene.staticScene.meta.world} />
+   ```
+   For full controls, use the `useReplayDriver` view model (wrapped by
+   `ReplayProvider`).
 
 ## Project documents
 
 - [`manifest.md`](manifest.md) — project charter / intent (purpose, goals, milestones)
 - [`project-state.md`](project-state.md) — current state and progress
+- [`docs/usage.md`](docs/usage.md) — authoring scenes and embedding the player
 - [`CHANGELOG.md`](CHANGELOG.md) — versioned change log
-
-
-## Shaping decisions (from /loop-seed)
-
-
-- **The prototype draws every asset (desks, chairs, characters, backgrounds) procedurally on canvas — there are no image files. Should the engine keep procedural canvas assets, or must it also support external image assets (PNG sprites / background images)?** — External image assets (sprites/backgrounds) with procedural fallback
-
-- **In the prototype, characters teleport instantly between 'move' events (state is computed per timestamp, no animation). How should character movement work in the built engine?** — Discrete snap (match current prototype)
-
-- **Should the replay engine support audio (dialogue lines, ambient sound, SFX) driven by timeline events, or is it visual-only?** — Visual-only (no audio) *(assumed)*
-
-- **Is this project strictly a playback/replay engine (scenes authored externally as JSON), or does it also need an authoring/editing UI to build and modify scenes in-app?** — Playback/replay only (scenes authored as JSON) *(assumed)*
-
-- **The goal says the player should be 'universal — play any 2d scene'. Should the engine support a fixed set of asset types and event types (exactly what the prototype has), or an extensible plugin registry so new asset types and event types can be added declaratively?** — Fixed set from the prototype
-
-- **How many sample scenes should ship with the app for the showcase and validation?** — Single office scene from the prototype *(assumed)*
-
-
