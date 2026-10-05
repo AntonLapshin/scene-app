@@ -12,6 +12,8 @@ import type { RenderState, Scene } from "../../core/scene";
 export interface ReplayDriverResult {
   /** The current playback timestamp (seconds), clamped to `[0, duration]`. */
   timestamp: number;
+  /** The scenario duration (seconds), from core `scenarioDuration`. */
+  duration: number;
   /** The render state at the current timestamp, from core `computeSceneState`. */
   renderState: RenderState;
   /** Whether playback is currently advancing. */
@@ -130,6 +132,7 @@ export function useReplayDriver(
 
   return {
     timestamp,
+    duration,
     renderState,
     isPlaying,
     play,
