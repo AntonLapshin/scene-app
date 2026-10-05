@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Showcase entries for every component (M4-T5): a `ShowcasePage` in `src/ui/pages` lists a documented, representative showcase entry for each atom (`Button`, `Slider`, `Badge`, `Sprite`), each molecule (`PlaybackControlsMolecule`, `CharacterCard`, `TimelineScrubber`) and each organism (`SceneStage`, `PlaybackBar`, `SceneInfoPanel`), via the thin `ShowcaseEntry` wrapper in `src/ui/showcase`. Organism entries are wrapped in `ReplayProvider`; the existing `ShowcasePanel` (SceneView) entry is retained and integrated. `App` gains a thin nav toggling between the `PlaybackPage` and the `ShowcasePage`.
+- Tests for the showcase library (`tests/ui/showcase/showcase.test.tsx`) covering the `ShowcaseEntry` wrapper, every atom/molecule/organism entry, the retained `ShowcasePanel` integration, and the App nav toggle.
 - Context injection (M4-T4): thin `ReplayContext` + `ReplayProvider` in `src/ui/context` inject replay state (timestamp, duration, isPlaying, render state) and driver actions (seek, toggle, stepForward, stepBackward) via a `useReplay()` hook, so organisms consume replay state from context instead of prop drilling. `SceneStage`, `PlaybackBar` and `SceneInfoPanel` now read replay state from context; `App` wraps the tree in `ReplayProvider`.
 - `ThemeContext` + `ThemeProvider` scaffold in `src/ui/context` exposing a design-token surface (`Theme` / `ThemeTokens`) with a sensible `defaultTheme`, injected via `useTheme()` and ready for M5 theming.
 - Tests for the context providers/hooks (`tests/ui/context/context.test.tsx`) covering replay-state injection, driver action forwarding, throw-outside-provider, and theme default/custom injection.
