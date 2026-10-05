@@ -25,7 +25,7 @@ export function SceneInfoPanel({ title, style }: SceneInfoPanelProps) {
   const characters = renderState.characters;
 
   return (
-    <section className={`${tokens.radius} ${tokens.border} ${tokens.surface} p-6 shadow-sm`}>
+    <section className={`${tokens.radius} ${tokens.border} ${tokens.surface} p-4 shadow-sm sm:p-6`}>
       <h2 className={`text-xl font-semibold ${tokens.foreground}`}>Scene info</h2>
       <p className={`mt-1 text-sm ${tokens.textMuted}`}>
         Current state of each visible character and scene metadata.

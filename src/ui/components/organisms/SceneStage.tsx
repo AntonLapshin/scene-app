@@ -30,12 +30,12 @@ export function SceneStage({
   const { renderState } = useReplay();
   const { tokens } = useTheme();
   return (
-    <section className={`${tokens.radius} ${tokens.border} ${tokens.surface} p-6 shadow-sm`}>
+    <section className={`${tokens.radius} ${tokens.border} ${tokens.surface} p-4 shadow-sm sm:p-6`}>
       <h2 className={`text-xl font-semibold ${tokens.foreground}`}>{title}</h2>
       {description && (
         <p className={`mt-1 text-sm ${tokens.textMuted}`}>{description}</p>
       )}
-      <div className="mt-4">
+      <div className="mx-auto mt-4 w-full max-w-4xl overflow-hidden">
         <SceneView
           renderState={renderState}
           world={world}

@@ -30,7 +30,7 @@ export function TimelineScrubber({
   const clamped = Math.min(Math.max(value, 0), duration);
 
   return (
-    <div className="flex items-center gap-3 text-sm">
+    <div className="flex flex-wrap items-center gap-3 text-sm">
       <Slider
         value={clamped}
         min={0}

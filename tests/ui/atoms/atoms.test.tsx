@@ -57,6 +57,17 @@ describe("Slider atom (M4-T1)", () => {
     );
     expect((getByLabelText("Seek") as HTMLInputElement).step).toBe("1");
   });
+
+  it("applies responsive sizing classes so it fits narrow containers", () => {
+    const { getByLabelText } = render(
+      <Slider value={0} min={0} max={10} onChange={() => {}} ariaLabel="Seek" />,
+    );
+    const cls = (getByLabelText("Seek") as HTMLInputElement).className;
+    // Flexible width with a sensible minimum so it stays usable at small widths.
+    expect(cls).toContain("w-full");
+    expect(cls).toContain("min-w-40");
+    expect(cls).toContain("flex-1");
+  });
 });
 
 describe("Badge atom (M4-T1)", () => {

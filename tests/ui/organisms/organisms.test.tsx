@@ -68,6 +68,26 @@ describe("SceneStage organism (M4-T3, M4-T4)", () => {
     expect(getByText("Scene stage")).toBeTruthy();
     expect(queryByText(/description/i)).toBeNull();
   });
+
+  it("constrains and centers the stage to fit the container without overflowing", () => {
+    const { world } = officeScene();
+    const { container } = renderWithReplay(<SceneStage world={world} />, contextValue());
+    const stage = container.querySelector("section")!;
+    // Responsive section padding (tighter on mobile, roomier on larger screens).
+    expect(stage.className).toContain("p-4");
+    expect(stage.className).toContain("sm:p-6");
+    // The SceneView wrapper constrains + centers the stage and clips overflow.
+    const wrapper = Array.from(stage.querySelectorAll("div")).find((d) =>
+      d.className.includes("max-w-4xl"),
+    )!;
+    expect(wrapper.className).toContain("mx-auto");
+    expect(wrapper.className).toContain("w-full");
+    expect(wrapper.className).toContain("overflow-hidden");
+    // The stage SVG keeps its aspect-ratio behavior (h-auto w-full).
+    const svgClass = wrapper.querySelector("svg")!.getAttribute("class")!;
+    expect(svgClass).toContain("h-auto");
+    expect(svgClass).toContain("w-full");
+  });
 });
 
 describe("PlaybackBar organism (M4-T3, M4-T4)", () => {
@@ -104,6 +124,17 @@ describe("PlaybackBar organism (M4-T3, M4-T4)", () => {
     fireEvent.change(getByLabelText("Timeline"), { target: { value: "20" } });
     expect(seek).toHaveBeenCalledWith(20);
   });
+
+  it("lays out its section responsively and wraps the time readout", () => {
+    const { container } = renderWithReplay(<PlaybackBar />, contextValue());
+    const section = container.querySelector("section")!;
+    expect(section.className).toContain("p-4");
+    expect(section.className).toContain("sm:p-6");
+    const readout = Array.from(section.querySelectorAll("div")).find((d) =>
+      d.className.includes("flex-wrap") && d.className.includes("gap-2"),
+    )!;
+    expect(readout).toBeTruthy();
+  });
 });
 
 describe("SceneInfoPanel organism (M4-T3, M4-T4)", () => {
@@ -134,5 +165,20 @@ describe("SceneInfoPanel organism (M4-T3, M4-T4)", () => {
       contextValue({ renderState: { ...officeScene().renderState, characters: [] }, duration }),
     );
     expect(getByText("0 characters")).toBeTruthy();
+  });
+
+  it("uses responsive section padding and wraps its content rows", () => {
+    const { renderState, duration } = officeScene();
+    const { container } = renderWithReplay(
+      <SceneInfoPanel title="t" style="s" />,
+      contextValue({ renderState, duration }),
+    );
+    const section = container.querySelector("section")!;
+    expect(section.className).toContain("p-4");
+    expect(section.className).toContain("sm:p-6");
+    // Metadata badges and character cards rows wrap on narrow widths.
+    const rows = Array.from(section.querySelectorAll("div"))
+      .filter((d) => d.className.includes("flex-wrap"));
+    expect(rows.length).toBeGreaterThanOrEqual(2);
   });
 });
