@@ -110,9 +110,9 @@ Build a well-made, universal 2D scene replay engine that plays scenes defined de
   - Add showcase entries for theme variants and edge states
 
 **Sub-issues:**
-  - [ ] M5-T1 Theme pattern (design tokens) applied across all components
-  - [ ] M5-T2 Edge cases (missing assets, malformed JSON, empty timeline, out-of-range timestamps)
-  - [ ] M5-T3 Layout/responsive sizing polish
+  - [x] M5-T1 Theme pattern (design tokens) applied across all components
+  - [x] M5-T2 Edge cases (missing assets, malformed JSON, empty timeline, out-of-range timestamps)
+  - [x] M5-T3 Layout/responsive sizing polish
   - [ ] M5-T4 Showcase entries for theme variants and edge states
 
 ### M6 — Final integration, deployment, and docs
@@ -126,7 +126,7 @@ Build a well-made, universal 2D scene replay engine that plays scenes defined de
   - Final end-to-end verification of the replay engine and showcase
 
 **Sub-issues:**
-  - [ ] M6-T1 Ensure test (100% core coverage), lint, and build all pass in CI
+  - [x] M6-T1 Ensure test (100% core coverage), lint, and build all pass in CI
   - [x] M6-T2 Deploy live demo of the office scene to GitHub Pages
   - [ ] M6-T3 README + usage docs (authoring scenes, embedding the player)
   - [ ] M6-T4 Final end-to-end verification of replay engine and showcase

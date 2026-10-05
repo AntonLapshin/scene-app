@@ -29,8 +29,23 @@ barrels; organisms + pages (#32/#35: `SceneStage`, `PlaybackBar`,
 `SceneInfoPanel`, `PlaybackPage`); context injection (#33/#36: `ReplayProvider`
 + `ThemeProvider` in `src/ui/context` with `useReplay`/`useTheme` hooks) instead
 of prop drilling; and showcase entries for every component (#34/#37 via
-`ShowcasePage` + `ShowcaseEntry`). M5 (theming/polish) and M6 (final
-integration/docs) remain.
+`ShowcasePage` + `ShowcaseEntry`).
+
+**M5 complete** — theme pattern (#38/#41: expanded `ThemeTokens` surface in
+`src/ui/context/theme.ts` applied across all atoms, molecules, organisms, pages,
+demo/showcase chrome, with `defaultTheme` reproducing prior styling); edge cases
+(#39/#42: pure `parseSceneBundle` in `src/core/scene/parse.ts` returning a
+`SceneParseResult`, `SceneLoadError` panel, missing-asset procedural fallback,
+empty-timeline and out-of-range clamping); and layout/responsive polish
+(#40/#43: constrained/centered stage wrapper, responsive section padding,
+flexible slider, wrapping controls/scrubber/time readout, responsive
+character-card sizing). All M5 sub-issues merged.
+
+**M6 (final integration/docs) remains** — M5-T4 (showcase theme variants +
+edge states) and M6-T3 (README + usage docs) and M6-T4 (final end-to-end
+verification) are planned next. M6-T1 (CI green) and M6-T2 (live demo) are
+satisfied: CI runs lint/test:coverage/build all green, demo live at
+https://AntonLapshin.github.io/scene-app/.
 
 ## What's here
 
@@ -81,20 +96,20 @@ integration/docs) remain.
 - [x] M4-T4 Context injection (replay state, theme) instead of prop drilling (#33/#36)
 - [x] M4-T5 Showcase entries for every component (#34/#37)
 
-### M5 — Theming and polish (in progress)
-- [ ] M5-T1 Theme pattern (design tokens) applied across all components (#38)
-- [ ] M5-T2 Edge cases (missing assets, malformed JSON, empty timeline, out-of-range timestamps) (#39)
-- [ ] M5-T3 Layout/responsive sizing polish (#40)
-- [ ] M5-T4 Showcase entries for theme variants and edge states (planned next turn)
+### M5 — Theming and polish (complete)
+- [x] M5-T1 Theme pattern (design tokens) applied across all components (#38/#41)
+- [x] M5-T2 Edge cases (missing assets, malformed JSON, empty timeline, out-of-range timestamps) (#39/#42)
+- [x] M5-T3 Layout/responsive sizing polish (#40/#43)
+- [ ] M5-T4 Showcase entries for theme variants and edge states (#46)
 
 ### M6 — Final integration, deployment, and docs
-- [ ] M6-T1 Ensure test (100% core coverage), lint, and build all pass in CI
+- [x] M6-T1 Ensure test (100% core coverage), lint, and build all pass in CI
 - [x] M6-T2 Deploy live demo of the office scene to GitHub Pages
-- [ ] M6-T3 README + usage docs (authoring scenes, embedding the player)
-- [ ] M6-T4 Final end-to-end verification of replay engine and showcase
+- [ ] M6-T3 README + usage docs (authoring scenes, embedding the player) (#44)
+- [ ] M6-T4 Final end-to-end verification of replay engine and showcase (#45)
 
 ## Next steps
 
-- [ ] Engineer implements M5-T1 (#38), M5-T2 (#39), M5-T3 (#40).
-- [ ] Plan M5-T4 and M6 sub-issues on later PM turns.
+- [ ] Engineer implements M5-T4 (#46), M6-T3 (#44), M6-T4 (#45).
+- [ ] After M5-T4/M6-T3/M6-T4 merge, confirm the done-definition (all milestones complete, no open issues/PRs, CI green, 100% core coverage, build passes, demo live, README URL, changelog + project-state current).
 - [ ] CI passes on main.
