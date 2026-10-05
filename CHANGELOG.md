@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Final end-to-end verification (M6-T4, #45): ran the full verification suite
+  (lint, `npm test` — 253 passed, `npm run test:coverage` — 100% core, `npm run
+  build`) and confirmed the showcase library renders every component entry
+  including the theme-variant and edge-state entries (M5-T4). No code/gaps
+  found — verification-only; results reported in `project-state.md` and the PR
+  description.
+
 - Showcase entries for theme variants and edge states (M5-T4): a new `ThemeVariantShowcase` renders key atoms (`Button`, `Badge`, `Slider`) and the `SceneStage` organism under a non-default dark theme (`src/ui/showcase/variants/darkTheme.ts`) injected via `ThemeProvider`, proving components re-skin purely from the active tokens. New edge-state showcase entries in `src/ui/showcase/edge/` demonstrate the `SceneLoadError` panel (malformed JSON), an empty-timeline scene (initial state, clamped to 0), and an out-of-range-timestamp state (clamped to the end of the timeline). All new entries appear on `ShowcasePage` under new "Theme variants" and "Edge states" sections with titles/descriptions, and are thin/dumb — they reuse core (`computeInitialState`, `computeSceneState`, `scenarioDuration`) and `useTheme()` tokens with no new business logic. `SceneLoadError` was also converted to the theme pattern (reads tokens via `useTheme()`).
 - Tests for the new showcase entries (`tests/ui/showcase/showcaseVariants.test.tsx`) covering the dark-theme atom/organism rendering and non-default tokens, the `SceneLoadError` panel message, the empty-timeline initial state (Noah not yet visible), the out-of-range clamped end state, and the new `ShowcasePage` sections/entries; the theme test was extended to scope its heading assertion around the nested theme-variant provider.
 - Responsive layout and sizing polish (M5-T3): the scene stage now constrains and centers the `SceneView` in a `max-w-4xl` wrapper with `overflow-hidden` (the SVG keeps its `h-auto w-full` aspect-ratio fit), and all organism sections (`SceneStage`, `PlaybackBar`, `SceneInfoPanel`) use tighter `p-4` mobile padding that widens to `p-6` at `sm:`. The `Slider` atom becomes flexible (`w-full min-w-40 flex-1`) so the seek/progress slider stays usable at narrow widths, and the `PlaybackControlsMolecule` and `TimelineScrubber` strips plus the `PlaybackBar` time readout wrap (`flex-wrap`) instead of overflowing. `CharacterCard` stacks full-width on mobile (`w-full sm:w-56`) so character cards align consistently with the stage and controls. No core/business-logic changes — layout is UI-only.

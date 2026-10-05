@@ -41,11 +41,11 @@ empty-timeline and out-of-range clamping); and layout/responsive polish
 flexible slider, wrapping controls/scrubber/time readout, responsive
 character-card sizing). All M5 sub-issues merged.
 
-**M6 (final integration/docs) remains** — M5-T4 (showcase theme variants +
-edge states) and M6-T3 (README + usage docs) and M6-T4 (final end-to-end
-verification) are planned next. M6-T1 (CI green) and M6-T2 (live demo) are
-satisfied: CI runs lint/test:coverage/build all green, demo live at
-https://AntonLapshin.github.io/scene-app/.
+**M6 (final integration/docs) in progress** — M5-T4 (showcase theme variants +
+edge states) and M6-T3 (README + usage docs) are implemented and merged (or in
+PR); M6-T4 (final end-to-end verification) is running. M6-T1 (CI green) and
+M6-T2 (live demo) are satisfied: CI runs lint/test:coverage/build all green,
+demo live at https://AntonLapshin.github.io/scene-app/.
 
 ## What's here
 
@@ -107,6 +107,27 @@ https://AntonLapshin.github.io/scene-app/.
 - [x] M6-T2 Deploy live demo of the office scene to GitHub Pages
 - [ ] M6-T3 README + usage docs (authoring scenes, embedding the player) (#44)
 - [ ] M6-T4 Final end-to-end verification of replay engine and showcase (#45)
+
+## Final verification (M6-T4, #45)
+
+Ran the full verification suite on `main` (via PR #49):
+
+- `npm test` — 253 passed / 0 failed (28 files).
+- `npm run test:coverage` — 100% on `src/core/**` (and overall 100%).
+- `npm run lint` — clean (0 warnings).
+- `npm run build` — production build passes.
+- Latest CI run on `main` — green (lint/test/build).
+- Showcase — `ShowcasePage` renders every atom/molecule/organism entry plus the
+  new theme-variant (`ThemeVariantShowcase`) and edge-state
+  (`SceneLoadErrorShowcase`, `EmptyTimelineShowcase`, `OutOfRangeShowcase`)
+  entries, covered by `tests/ui/showcase/showcase.test.tsx` and
+  `tests/ui/showcase/showcaseVariants.test.tsx`.
+- Replay engine end-to-end — play/pause/seek/step, timeline evaluation and edge
+  cases are covered by `tests/core/scene/officeReplay.test.ts` (17 tests) and
+  the full suite; no code gaps found, no code changes required.
+
+All done-definition checks pass: milestones complete, CI green, 100% core
+coverage, build passes, demo live, README/docs current.
 
 ## Next steps
 
