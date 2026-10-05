@@ -97,11 +97,24 @@ describe("ThemeProvider + useTheme (M4-T4 scaffold)", () => {
     const custom: Theme = {
       name: "dark",
       tokens: {
-        primary: "#000000",
-        background: "#0f172a",
-        foreground: "#f8fafc",
-        border: "#334155",
-        radius: "0.5rem",
+        primary: "bg-violet-600 text-white hover:bg-violet-700 disabled:opacity-50",
+        secondary: "border border-slate-600 text-slate-200 hover:bg-slate-800 disabled:opacity-50",
+        accent: "accent-violet-500",
+        link: "text-violet-400 underline hover:text-violet-300",
+        background: "bg-slate-900",
+        surface: "bg-slate-800",
+        surfaceMuted: "bg-slate-700",
+        statusPill: "bg-emerald-900 text-emerald-200",
+        sayBubble: "bg-amber-900",
+        border: "border-slate-700",
+        controlBorder: "border-slate-600",
+        foreground: "text-slate-100",
+        textMuted: "text-slate-300",
+        textSubtle: "text-slate-400",
+        monoText: "font-mono text-slate-300",
+        radius: "rounded-2xl",
+        radiusSm: "rounded-lg",
+        radiusPill: "rounded-full",
       },
     };
     const wrapper = ({ children }: { children: ReactNode }) => (
@@ -109,6 +122,8 @@ describe("ThemeProvider + useTheme (M4-T4 scaffold)", () => {
     );
     const { result } = renderHook(() => useTheme(), { wrapper });
     expect(result.current).toEqual(custom);
-    expect(result.current.tokens.primary).toBe("#000000");
+    expect(result.current.tokens.primary).toBe(
+      "bg-violet-600 text-white hover:bg-violet-700 disabled:opacity-50",
+    );
   });
 });

@@ -1,6 +1,6 @@
 import type { ImageAvailability } from "../../../core/scene";
 import { SceneView } from "../SceneView";
-import { useReplay } from "../../context";
+import { useReplay, useTheme } from "../../context";
 
 export interface SceneStageProps {
   /** The scene world size, used for the `SceneView` SVG viewBox. */
@@ -28,11 +28,12 @@ export function SceneStage({
   description,
 }: SceneStageProps) {
   const { renderState } = useReplay();
+  const { tokens } = useTheme();
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 className="text-xl font-semibold text-slate-900">{title}</h2>
+    <section className={`${tokens.radius} ${tokens.border} ${tokens.surface} p-6 shadow-sm`}>
+      <h2 className={`text-xl font-semibold ${tokens.foreground}`}>{title}</h2>
       {description && (
-        <p className="mt-1 text-sm text-slate-600">{description}</p>
+        <p className={`mt-1 text-sm ${tokens.textMuted}`}>{description}</p>
       )}
       <div className="mt-4">
         <SceneView

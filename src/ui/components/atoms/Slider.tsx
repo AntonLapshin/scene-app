@@ -1,10 +1,13 @@
+import { useTheme } from "../../context";
+
 /**
- * Slider atom (M4-T1).
+ * Slider atom (M4-T1, themed M5-T1).
  *
  * A thin, dumb range input used for seeking. It contains no business logic —
  * it renders the value/min/max/step props and forwards the numeric value to
  * the `onChange` callback. Clamping is left to the caller (core `clampTimestamp`
- * handles it in the driver).
+ * handles it in the driver). The accent color comes from the injected theme
+ * tokens via `useTheme()`.
  */
 export interface SliderProps {
   /** The current value, rendered as the input value. */
@@ -29,6 +32,7 @@ export function Slider({
   onChange,
   ariaLabel,
 }: SliderProps) {
+  const { tokens } = useTheme();
   return (
     <input
       type="range"
@@ -38,7 +42,7 @@ export function Slider({
       value={value}
       onChange={(e) => onChange(Number(e.target.value))}
       aria-label={ariaLabel}
-      className="w-52 accent-indigo-600"
+      className={`w-52 ${tokens.accent}`}
     />
   );
 }

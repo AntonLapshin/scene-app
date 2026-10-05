@@ -1,5 +1,6 @@
 import type { RenderState, ImageAvailability } from "../../core/scene";
 import { SceneView } from "./SceneView";
+import { useTheme } from "../context";
 
 export interface ShowcasePanelProps {
   /** Component title shown in the showcase entry. */
@@ -28,14 +29,15 @@ export function ShowcasePanel({
   world,
   imageAvailable = () => false,
 }: ShowcasePanelProps) {
+  const { tokens } = useTheme();
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 className="text-xl font-semibold text-slate-900">{title}</h2>
-      <p className="mt-1 text-sm text-slate-600">{description}</p>
+    <section className={`${tokens.radius} ${tokens.border} ${tokens.surface} p-6 shadow-sm`}>
+      <h2 className={`text-xl font-semibold ${tokens.foreground}`}>{title}</h2>
+      <p className={`mt-1 text-sm ${tokens.textMuted}`}>{description}</p>
 
       <dl className="mt-4 space-y-1 text-sm">
-        <dt className="text-slate-500">Props</dt>
-        <dd className="font-mono text-xs text-slate-500">
+        <dt className={tokens.textSubtle}>Props</dt>
+        <dd className={`font-mono text-xs ${tokens.textSubtle}`}>
           renderState · world · imageAvailable
         </dd>
       </dl>

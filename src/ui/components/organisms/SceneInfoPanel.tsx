@@ -1,4 +1,4 @@
-import { useReplay } from "../../context";
+import { useReplay, useTheme } from "../../context";
 import { CharacterCard } from "../molecules/CharacterCard";
 import { Badge } from "../atoms/Badge";
 
@@ -10,23 +10,24 @@ export interface SceneInfoPanelProps {
 }
 
 /**
- * SceneInfoPanel organism (M4-T3, refactored M4-T4).
+ * SceneInfoPanel organism (M4-T3, refactored M4-T4, themed M5-T1).
  *
  * Composes `CharacterCard`s for the visible characters plus a row of scene
  * metadata `Badge`s (name, style, duration, character count). It reads the
- * visible characters and duration from `ReplayContext` via `useReplay()` and is
- * otherwise thin and dumb: it contains no business logic — it only renders
- * context values and composes the molecule/atom. All derivation stays in
- * core/view models.
+ * visible characters and duration from `ReplayContext` via `useReplay()` and the
+ * theme tokens via `useTheme()`. It is otherwise thin and dumb: it contains no
+ * business logic — it only renders context values and composes the
+ * molecule/atom. All derivation stays in core/view models.
  */
 export function SceneInfoPanel({ title, style }: SceneInfoPanelProps) {
   const { renderState, duration } = useReplay();
+  const { tokens } = useTheme();
   const characters = renderState.characters;
 
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 className="text-xl font-semibold text-slate-900">Scene info</h2>
-      <p className="mt-1 text-sm text-slate-600">
+    <section className={`${tokens.radius} ${tokens.border} ${tokens.surface} p-6 shadow-sm`}>
+      <h2 className={`text-xl font-semibold ${tokens.foreground}`}>Scene info</h2>
+      <p className={`mt-1 text-sm ${tokens.textMuted}`}>
         Current state of each visible character and scene metadata.
       </p>
 
