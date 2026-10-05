@@ -15,9 +15,8 @@ import type {
   Scenario,
 } from "../core/scene";
 import {
-  parseStaticScene,
-  parseLiveScene,
-  parseScenario,
+  parseSceneBundle,
+  SceneParseError,
 } from "../core/scene";
 
 /** Raw STATIC_SCENE data for the office scene. */
@@ -206,15 +205,13 @@ export const officeSceneData: Scene = {
 };
 
 /**
- * Load the office scene: parse the raw office data into a typed `Scene` using
- * the core `parse*` functions. `raw` defaults to the bundled office scene data.
- * Purely validates the data — throws a descriptive `SceneParseError` if any
- * part is malformed or missing.
+ * Load the office scene: parse the bundled office data into a typed `Scene`
+ * using the core `parseSceneBundle` (which validates each part). `raw` defaults
+ * to the bundled office scene data. Purely validates the data — throws a
+ * descriptive error if any part is malformed or missing.
  */
 export function loadOfficeScene(raw: Scene = officeSceneData): Scene {
-  return {
-    staticScene: parseStaticScene(raw.staticScene),
-    liveScene: parseLiveScene(raw.liveScene),
-    scenario: parseScenario(raw.scenario),
-  };
+  const result = parseSceneBundle(raw);
+  if (!result.ok) throw new SceneParseError(result.error);
+  return result.scene;
 }

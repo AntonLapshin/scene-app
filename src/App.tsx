@@ -1,25 +1,43 @@
 import { useMemo, useState } from "react";
 import { DemoPanel } from "./ui/components/DemoPanel";
 import { Button } from "./ui/components/atoms/Button";
+import { SceneLoadError } from "./ui/components/SceneLoadError";
 import { PlaybackPage } from "./ui/pages/PlaybackPage";
 import { ShowcasePage } from "./ui/pages/ShowcasePage";
 import { ReplayProvider } from "./ui/context/ReplayProvider";
 import { ThemeProvider } from "./ui/context/ThemeProvider";
-import { loadOfficeScene } from "./data/officeScene";
+import { parseSceneBundle } from "./core/scene";
+import { officeSceneData } from "./data/officeScene";
+
+export interface AppProps {
+  /** The raw scene bundle to load. Defaults to the bundled office scene. */
+  rawScene?: unknown;
+}
 
 /**
  * App root.
  *
- * Wraps the tree in the thin `ReplayProvider` (injecting replay state via
- * `ReplayContext`) and `ThemeProvider` (injecting the design-token surface via
- * `ThemeContext`), then renders the demo panel and a thin nav toggling between
- * the `PlaybackPage` and the `ShowcasePage` (which lists every component). All
- * derivation happens in view models / context / core — no business logic lives
- * here.
+ * Loads the scene via the core `parseSceneBundle` (which returns a result
+ * instead of throwing) and wraps the tree in the thin `ReplayProvider`
+ * and `ThemeProvider`. If the scene fails to parse, a clear user-facing
+ * `SceneLoadError` is rendered instead of a blank crash. All derivation
+ * happens in view models / context / core — no business logic lives here.
  */
-export default function App() {
-  const scene = useMemo(() => loadOfficeScene(), []);
+export default function App({ rawScene = officeSceneData }: AppProps) {
+  const result = useMemo(() => parseSceneBundle(rawScene), [rawScene]);
   const [view, setView] = useState<"playback" | "showcase">("playback");
+
+  if (!result.ok) {
+    return (
+      <ThemeProvider>
+        <main className="flex min-h-screen items-center justify-center bg-slate-100 p-6">
+          <SceneLoadError message={result.error} />
+        </main>
+      </ThemeProvider>
+    );
+  }
+
+  const scene = result.scene;
 
   return (
     <ThemeProvider>

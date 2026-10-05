@@ -21,4 +21,19 @@ describe("App (M4-T3)", () => {
     expect(getByText("Scene info")).toBeTruthy();
     expect(container.querySelector("[data-character-card='maya']")).not.toBeNull();
   });
+
+  it("renders a clear error state (not a crash) when the scene JSON is malformed", () => {
+    const malformed = {
+      staticScene: { ...{} },
+      liveScene: {},
+      scenario: {},
+    };
+    const { container, getByText } = render(<App rawScene={malformed} />);
+    expect(getByText("Scene failed to load")).toBeTruthy();
+    const pre = container.querySelector("[data-error-message]");
+    expect(pre).not.toBeNull();
+    expect(pre!.textContent).toContain("must be");
+    // No playback UI is rendered when the scene failed to load.
+    expect(container.querySelector("[data-character='maya']")).toBeNull();
+  });
 });
