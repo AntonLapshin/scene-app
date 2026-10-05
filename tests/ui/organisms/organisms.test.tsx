@@ -1,13 +1,15 @@
 import { describe, it, expect, vi } from "vitest";
+import type { ReactNode } from "react";
 import { render, fireEvent } from "@testing-library/react";
 import {
   SceneStage,
   PlaybackBar,
   SceneInfoPanel,
 } from "../../../src/ui/components/organisms";
+import { ReplayContext } from "../../../src/ui/context";
+import type { ReplayContextValue } from "../../../src/ui/context";
 import { loadOfficeScene } from "../../../src/data/officeScene";
 import { computeInitialState, scenarioDuration } from "../../../src/core/scene";
-import type { ReplayDriverResult } from "../../../src/ui/viewModels/useReplayDriver";
 
 function officeScene() {
   const scene = loadOfficeScene();
@@ -19,33 +21,36 @@ function officeScene() {
   };
 }
 
-function driverResult(overrides: Partial<ReplayDriverResult> = {}): ReplayDriverResult {
+function contextValue(overrides: Partial<ReplayContextValue> = {}): ReplayContextValue {
   const { renderState, duration } = officeScene();
   return {
     timestamp: 0,
     duration,
-    renderState,
     isPlaying: false,
-    play: vi.fn(),
-    pause: vi.fn(),
-    toggle: vi.fn(),
+    renderState,
     seek: vi.fn(),
+    toggle: vi.fn(),
     stepForward: vi.fn(),
     stepBackward: vi.fn(),
     ...overrides,
   };
 }
 
-describe("SceneStage organism (M4-T3)", () => {
-  it("renders the SceneView stage with the world viewBox and a visible character", () => {
+/** Render `ui` with a `ReplayContext.Provider` carrying `value`. */
+function renderWithReplay(ui: ReactNode, value: ReplayContextValue) {
+  return render(<ReplayContext.Provider value={value}>{ui}</ReplayContext.Provider>);
+}
+
+describe("SceneStage organism (M4-T3, M4-T4)", () => {
+  it("renders the SceneView stage reading renderState from context", () => {
     const { renderState, world } = officeScene();
-    const { container, getByText } = render(
+    const { container, getByText } = renderWithReplay(
       <SceneStage
         title="Stage"
         description="The scene stage."
-        renderState={renderState}
         world={world}
       />,
+      contextValue({ renderState }),
     );
     expect(getByText("Stage")).toBeTruthy();
     expect(getByText(/The scene stage/)).toBeTruthy();
@@ -55,19 +60,23 @@ describe("SceneStage organism (M4-T3)", () => {
   });
 
   it("defaults the title to Scene stage and omits the description when absent", () => {
-    const { renderState, world } = officeScene();
-    const { getByText, queryByText } = render(
-      <SceneStage renderState={renderState} world={world} />,
+    const { world } = officeScene();
+    const { getByText, queryByText } = renderWithReplay(
+      <SceneStage world={world} />,
+      contextValue(),
     );
     expect(getByText("Scene stage")).toBeTruthy();
     expect(queryByText(/description/i)).toBeNull();
   });
 });
 
-describe("PlaybackBar organism (M4-T3)", () => {
-  it("composes the controls molecule, timeline scrubber and time readout", () => {
-    const driver = driverResult({ timestamp: 12.5, isPlaying: true });
-    const { getByLabelText, getByText, getAllByText } = render(<PlaybackBar driver={driver} />);
+describe("PlaybackBar organism (M4-T3, M4-T4)", () => {
+  it("composes the controls molecule, timeline scrubber and time readout from context", () => {
+    const value = contextValue({ timestamp: 12.5, isPlaying: true });
+    const { getByLabelText, getByText, getAllByText } = renderWithReplay(
+      <PlaybackBar />,
+      value,
+    );
     expect(getByText("Playback controls")).toBeTruthy();
     // Controls molecule.
     expect(getByLabelText("Pause")).toBeTruthy();
@@ -79,13 +88,13 @@ describe("PlaybackBar organism (M4-T3)", () => {
     expect(getAllByText("12.5s / 41.0s").length).toBeGreaterThan(0);
   });
 
-  it("forwards driver interactions to the callbacks", () => {
+  it("forwards driver interactions from context to the callbacks", () => {
     const toggle = vi.fn();
     const seek = vi.fn();
     const stepForward = vi.fn();
     const stepBackward = vi.fn();
-    const driver = driverResult({ toggle, seek, stepForward, stepBackward });
-    const { getByLabelText } = render(<PlaybackBar driver={driver} />);
+    const value = contextValue({ toggle, seek, stepForward, stepBackward });
+    const { getByLabelText } = renderWithReplay(<PlaybackBar />, value);
     fireEvent.click(getByLabelText("Play"));
     expect(toggle).toHaveBeenCalledTimes(1);
     fireEvent.click(getByLabelText("Step forward"));
@@ -97,16 +106,12 @@ describe("PlaybackBar organism (M4-T3)", () => {
   });
 });
 
-describe("SceneInfoPanel organism (M4-T3)", () => {
-  it("renders metadata badges and a CharacterCard per visible character", () => {
+describe("SceneInfoPanel organism (M4-T3, M4-T4)", () => {
+  it("renders metadata badges and a CharacterCard per visible character from context", () => {
     const { renderState, duration } = officeScene();
-    const { container, getByText, getAllByText } = render(
-      <SceneInfoPanel
-        characters={renderState.characters}
-        title="Northlight Studio · Floor 3"
-        style="gem-flat 2.5D"
-        duration={duration}
-      />,
+    const { container, getByText, getAllByText } = renderWithReplay(
+      <SceneInfoPanel title="Northlight Studio · Floor 3" style="gem-flat 2.5D" />,
+      contextValue({ renderState, duration }),
     );
     expect(getByText("Scene info")).toBeTruthy();
     // Metadata badges.
@@ -122,10 +127,11 @@ describe("SceneInfoPanel organism (M4-T3)", () => {
     expect(getAllByText("Maya").length).toBeGreaterThan(0);
   });
 
-  it("renders an empty panel when there are no visible characters", () => {
+  it("renders an empty panel when the context has no visible characters", () => {
     const { duration } = officeScene();
-    const { getByText } = render(
-      <SceneInfoPanel characters={[]} title="t" style="s" duration={duration} />,
+    const { getByText } = renderWithReplay(
+      <SceneInfoPanel title="t" style="s" />,
+      contextValue({ renderState: { ...officeScene().renderState, characters: [] }, duration }),
     );
     expect(getByText("0 characters")).toBeTruthy();
   });

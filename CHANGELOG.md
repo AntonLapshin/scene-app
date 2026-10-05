@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Context injection (M4-T4): thin `ReplayContext` + `ReplayProvider` in `src/ui/context` inject replay state (timestamp, duration, isPlaying, render state) and driver actions (seek, toggle, stepForward, stepBackward) via a `useReplay()` hook, so organisms consume replay state from context instead of prop drilling. `SceneStage`, `PlaybackBar` and `SceneInfoPanel` now read replay state from context; `App` wraps the tree in `ReplayProvider`.
+- `ThemeContext` + `ThemeProvider` scaffold in `src/ui/context` exposing a design-token surface (`Theme` / `ThemeTokens`) with a sensible `defaultTheme`, injected via `useTheme()` and ready for M5 theming.
+- Tests for the context providers/hooks (`tests/ui/context/context.test.tsx`) covering replay-state injection, driver action forwarding, throw-outside-provider, and theme default/custom injection.
 - Initial React + Tailwind + TypeScript scaffold (Vite).
 - Core/UI separation with `src/core` (business logic) and `src/ui` (thin views).
 - Vitest setup enforcing 100% coverage on `src/core/**/*.ts`.

@@ -1,9 +1,8 @@
-import type { RenderState, ImageAvailability } from "../../../core/scene";
+import type { ImageAvailability } from "../../../core/scene";
 import { SceneView } from "../SceneView";
+import { useReplay } from "../../context";
 
 export interface SceneStageProps {
-  /** The ordered render state to draw. */
-  renderState: RenderState;
   /** The scene world size, used for the `SceneView` SVG viewBox. */
   world: { w: number; h: number };
   /** External-image availability predicate (delegated to core `renderAsset`). */
@@ -15,19 +14,20 @@ export interface SceneStageProps {
 }
 
 /**
- * SceneStage organism (M4-T3).
+ * SceneStage organism (M4-T3, refactored M4-T4).
  *
- * Composes the dumb `SceneView` into a titled, card-framed stage section. It is
- * thin and dumb: it contains no business logic — it only renders props and
- * composes `SceneView`. All derivation stays in core/view models.
+ * Composes the dumb `SceneView` into a titled, card-framed stage section. It
+ * reads the current `renderState` from `ReplayContext` via `useReplay()` and is
+ * otherwise thin and dumb: it contains no business logic — it only renders props
+ * and composes `SceneView`. All derivation stays in core/view models.
  */
 export function SceneStage({
-  renderState,
   world,
   imageAvailable = () => false,
   title = "Scene stage",
   description,
 }: SceneStageProps) {
+  const { renderState } = useReplay();
   return (
     <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
       <h2 className="text-xl font-semibold text-slate-900">{title}</h2>

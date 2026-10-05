@@ -1,12 +1,16 @@
 import { describe, it, expect } from "vitest";
 import { render } from "@testing-library/react";
 import { PlaybackPage } from "../../../src/ui/pages/PlaybackPage";
+import { ReplayProvider } from "../../../src/ui/context/ReplayProvider";
 import { loadOfficeScene } from "../../../src/data/officeScene";
 
-describe("PlaybackPage (M4-T3)", () => {
-  it("composes the three organisms wired to the replay driver", () => {
+describe("PlaybackPage (M4-T3, M4-T4)", () => {
+  it("composes the three organisms reading replay state from context", () => {
+    const scene = loadOfficeScene();
     const { container, getByText, getByLabelText, getAllByText } = render(
-      <PlaybackPage scene={loadOfficeScene()} />,
+      <ReplayProvider scene={scene}>
+        <PlaybackPage scene={scene} />
+      </ReplayProvider>,
     );
 
     // SceneStage.
