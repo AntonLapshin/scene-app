@@ -95,9 +95,9 @@ Build a well-made, universal 2D scene replay engine that plays scenes defined de
 **Sub-issues:**
   - [x] M4-T1 Extract reusable atoms (buttons, sliders, badges, sprites)
   - [x] M4-T2 Extract reusable molecules (playback controls, character card, timeline scrubber)
-  - [ ] M4-T3 Compose organisms (SceneStage, PlaybackBar, SceneInfoPanel) and pages
-  - [ ] M4-T4 Context injection (replay state, theme) instead of prop drilling
-  - [ ] M4-T5 Showcase entries for every component
+  - [x] M4-T3 Compose organisms (SceneStage, PlaybackBar, SceneInfoPanel) and pages
+  - [x] M4-T4 Context injection (replay state, theme) instead of prop drilling
+  - [x] M4-T5 Showcase entries for every component
 
 ### M5 — Theming and polish
 

@@ -22,12 +22,15 @@ play/pause/seek/step and time/duration display + seekable progress slider; and
 end-to-end playback verification vs the prototype (#26/#29) via
 `tests/core/scene/officeReplay.test.ts`.
 
-**M4 in progress** — atoms (#28/#30: `Button`, `Slider`, `Badge`, `Sprite`) and
+**M4 complete** — atoms (#28/#30: `Button`, `Slider`, `Badge`, `Sprite`) and
 molecules (#27/#31: `PlaybackControlsMolecule`, `CharacterCard`,
 `TimelineScrubber`) extracted into `src/ui/components/{atoms,molecules}` with
-barrels. Remaining M4: organisms + pages (M4-T3), context injection (M4-T4),
-and showcase entries for every component (M4-T5). M5 (theming/polish) and M6
-(final integration/docs) remain.
+barrels; organisms + pages (#32/#35: `SceneStage`, `PlaybackBar`,
+`SceneInfoPanel`, `PlaybackPage`); context injection (#33/#36: `ReplayProvider`
++ `ThemeProvider` in `src/ui/context` with `useReplay`/`useTheme` hooks) instead
+of prop drilling; and showcase entries for every component (#34/#37 via
+`ShowcasePage` + `ShowcaseEntry`). M5 (theming/polish) and M6 (final
+integration/docs) remain.
 
 ## What's here
 
@@ -71,12 +74,12 @@ and showcase entries for every component (M4-T5). M5 (theming/polish) and M6
 - [x] M3-T3 Time/duration display + seekable progress control (#22/#25)
 - [x] M3-T4 End-to-end playback verification vs prototype (#26/#29)
 
-### M4 — Atomic UI components + showcase (in progress)
+### M4 — Atomic UI components + showcase (complete)
 - [x] M4-T1 Extract reusable atoms (buttons, sliders, badges, sprites) (#28/#30)
 - [x] M4-T2 Extract reusable molecules (playback controls, character card, timeline scrubber) (#27/#31)
-- [ ] M4-T3 Compose organisms (SceneStage, PlaybackBar, SceneInfoPanel) and pages (#32)
-- [ ] M4-T4 Context injection (replay state, theme) instead of prop drilling (#33)
-- [ ] M4-T5 Showcase entries for every component (#34)
+- [x] M4-T3 Compose organisms (SceneStage, PlaybackBar, SceneInfoPanel) and pages (#32/#35)
+- [x] M4-T4 Context injection (replay state, theme) instead of prop drilling (#33/#36)
+- [x] M4-T5 Showcase entries for every component (#34/#37)
 
 ### M5 — Theming and polish (planned this turn)
 - [ ] M5-T1 Theme pattern (design tokens) applied across all components
@@ -92,6 +95,6 @@ and showcase entries for every component (M4-T5). M5 (theming/polish) and M6
 
 ## Next steps
 
-- [ ] Engineer implements M4-T3 (#32), M4-T4 (#33), M4-T5 (#34).
-- [ ] Plan milestone M5 sub-issues on the next PM turn.
+- [ ] Engineer implements M5 sub-issues (theming/polish).
+- [ ] Plan remaining M5 (showcase theme/edge variants) and M6 sub-issues on later PM turns.
 - [ ] CI passes on main.
