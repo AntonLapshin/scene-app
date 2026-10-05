@@ -9,3 +9,5 @@ export type { ShowcaseEntryProps } from "./ShowcaseEntry";
 export * from "./atoms";
 export * from "./molecules";
 export * from "./organisms";
+export * from "./variants";
+export * from "./edge";

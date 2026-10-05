@@ -19,6 +19,12 @@ import {
   PlaybackBarShowcase,
   SceneInfoPanelShowcase,
 } from "../showcase/organisms";
+import { ThemeVariantShowcase } from "../showcase/variants";
+import {
+  SceneLoadErrorShowcase,
+  EmptyTimelineShowcase,
+  OutOfRangeShowcase,
+} from "../showcase/edge";
 
 /**
  * ShowcasePage (M4-T5).
@@ -71,6 +77,22 @@ export function ShowcasePage({ scene }: { scene: Scene }) {
           <SceneStageShowcase />
           <PlaybackBarShowcase />
           <SceneInfoPanelShowcase />
+        </div>
+      </section>
+
+      <section className="space-y-6">
+        <h2 className={`text-lg font-semibold ${tokens.foreground}`}>Theme variants</h2>
+        <div className="grid gap-6 lg:grid-cols-2">
+          <ThemeVariantShowcase />
+        </div>
+      </section>
+
+      <section className="space-y-6">
+        <h2 className={`text-lg font-semibold ${tokens.foreground}`}>Edge states</h2>
+        <div className="grid gap-6 lg:grid-cols-2">
+          <SceneLoadErrorShowcase />
+          <EmptyTimelineShowcase />
+          <OutOfRangeShowcase />
         </div>
       </section>
 

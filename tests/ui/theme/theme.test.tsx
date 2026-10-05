@@ -168,7 +168,12 @@ describe("M5-T1 theme-driven styling", () => {
     const { container } = render(themed(<ShowcasePage scene={scene} />));
     const h1 = container.querySelector("h1")!;
     expect(h1.className).toContain("text-custom-foreground");
-    const h2s = container.querySelectorAll("h2");
+    // The theme-variant showcase intentionally overrides the theme for its own
+    // demo content via a nested ThemeProvider, so its headings are excluded.
+    const variant = container.querySelector("[data-showcase='Theme variant · dark']")!;
+    const h2s = Array.from(container.querySelectorAll("h2")).filter(
+      (h2) => !variant.contains(h2),
+    );
     for (const h2 of h2s) {
       expect(h2.className).toContain("text-custom-foreground");
     }
