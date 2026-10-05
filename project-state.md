@@ -81,11 +81,11 @@ integration/docs) remain.
 - [x] M4-T4 Context injection (replay state, theme) instead of prop drilling (#33/#36)
 - [x] M4-T5 Showcase entries for every component (#34/#37)
 
-### M5 — Theming and polish (planned this turn)
-- [ ] M5-T1 Theme pattern (design tokens) applied across all components
-- [ ] M5-T2 Edge cases (missing assets, malformed JSON, empty timeline, out-of-range timestamps)
-- [ ] M5-T3 Layout/responsive sizing polish
-- [ ] M5-T4 Showcase entries for theme variants and edge states
+### M5 — Theming and polish (in progress)
+- [ ] M5-T1 Theme pattern (design tokens) applied across all components (#38)
+- [ ] M5-T2 Edge cases (missing assets, malformed JSON, empty timeline, out-of-range timestamps) (#39)
+- [ ] M5-T3 Layout/responsive sizing polish (#40)
+- [ ] M5-T4 Showcase entries for theme variants and edge states (planned next turn)
 
 ### M6 — Final integration, deployment, and docs
 - [ ] M6-T1 Ensure test (100% core coverage), lint, and build all pass in CI
@@ -95,6 +95,6 @@ integration/docs) remain.
 
 ## Next steps
 
-- [ ] Engineer implements M5 sub-issues (theming/polish).
-- [ ] Plan remaining M5 (showcase theme/edge variants) and M6 sub-issues on later PM turns.
+- [ ] Engineer implements M5-T1 (#38), M5-T2 (#39), M5-T3 (#40).
+- [ ] Plan M5-T4 and M6 sub-issues on later PM turns.
 - [ ] CI passes on main.
