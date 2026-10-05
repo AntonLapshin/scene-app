@@ -19,7 +19,7 @@ export function PlaybackBar() {
   const { tokens } = useTheme();
 
   return (
-    <section className={`${tokens.radius} ${tokens.border} ${tokens.surface} p-6 shadow-sm`}>
+    <section className={`${tokens.radius} ${tokens.border} ${tokens.surface} p-4 shadow-sm sm:p-6`}>
       <h2 className={`text-xl font-semibold ${tokens.foreground}`}>Playback controls</h2>
       <p className={`mt-1 text-sm ${tokens.textMuted}`}>
         Play, pause, seek, and step through the scenario timeline.
@@ -41,7 +41,7 @@ export function PlaybackBar() {
         <TimelineScrubber value={timestamp} duration={duration} onChange={seek} />
       </div>
 
-      <div className="mt-3 flex items-center gap-2 text-sm">
+      <div className="mt-3 flex flex-wrap items-center gap-2 text-sm">
         <Badge>Time</Badge>
         <Badge tone="muted">
           {timestamp.toFixed(1)}s / {duration.toFixed(1)}s

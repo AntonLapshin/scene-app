@@ -32,7 +32,7 @@ export function CharacterCard({ character }: CharacterCardProps) {
   return (
     <article
       data-character-card={character.id}
-      className={`flex w-56 flex-col gap-3 ${tokens.radius} ${tokens.border} ${tokens.surface} p-4 shadow-sm`}
+      className={`flex w-full flex-col gap-3 sm:w-56 ${tokens.radius} ${tokens.border} ${tokens.surface} p-4 shadow-sm`}
     >
       <header className="flex items-center gap-3">
         <svg

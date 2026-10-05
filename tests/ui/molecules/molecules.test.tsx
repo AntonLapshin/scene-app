@@ -72,6 +72,13 @@ describe("PlaybackControlsMolecule (M4-T2)", () => {
     );
     expect(getByText("41.0s / 41.0s")).toBeTruthy();
   });
+
+  it("wraps its control strip so it stays usable at narrow widths", () => {
+    const { container } = render(<PlaybackControlsMolecule {...baseProps} />);
+    const strip = container.querySelector("div")!;
+    expect(strip.className).toContain("flex-wrap");
+    expect(strip.className).toContain("items-center");
+  });
 });
 
 describe("TimelineScrubber (M4-T2)", () => {
@@ -95,6 +102,15 @@ describe("TimelineScrubber (M4-T2)", () => {
     );
     expect(getByLabelText("Timeline")).toBeTruthy();
     expect(getByText("41.0s / 41.0s")).toBeTruthy();
+  });
+
+  it("wraps its slider row so it stays usable at narrow widths", () => {
+    const { container } = render(
+      <TimelineScrubber value={10} duration={41} onChange={() => {}} />,
+    );
+    const row = container.querySelector("div")!;
+    expect(row.className).toContain("flex-wrap");
+    expect(row.className).toContain("items-center");
   });
 });
 
@@ -126,5 +142,12 @@ describe("CharacterCard (M4-T2)", () => {
   it("omits the say bubble when the character is not speaking", () => {
     const { container } = render(<CharacterCard character={maya} />);
     expect(container.querySelector("[data-say-bubble]")).toBeNull();
+  });
+
+  it("sizes the card responsively so it stacks on narrow screens", () => {
+    const { container } = render(<CharacterCard character={maya} />);
+    const cls = container.querySelector("[data-character-card]")!.className;
+    expect(cls).toContain("w-full");
+    expect(cls).toContain("sm:w-56");
   });
 });

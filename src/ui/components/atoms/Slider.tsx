@@ -42,7 +42,7 @@ export function Slider({
       value={value}
       onChange={(e) => onChange(Number(e.target.value))}
       aria-label={ariaLabel}
-      className={`w-52 ${tokens.accent}`}
+      className={`w-full min-w-40 flex-1 ${tokens.accent}`}
     />
   );
 }
